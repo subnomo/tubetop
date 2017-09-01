@@ -1,0 +1,9 @@
+{
+  "name": "tubetop",
+  "version": "0.0.1",
+  "description": "A YouTube music player, for your desktop.",
+  "main": "index.js",
+  "repository": "https://github.com/subnomo/tubetop",
+  "author": "Alex Taylor <alex@subnomo.me>",
+  "license": "MIT"
+}
