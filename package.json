@@ -2,8 +2,19 @@
   "name": "tubetop",
   "version": "0.0.1",
   "description": "A YouTube music player, for your desktop.",
-  "main": "index.js",
+  "main": "dist/app.js",
   "repository": "https://github.com/subnomo/tubetop",
   "author": "Alex Taylor <alex@subnomo.me>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^16.0.5",
+    "@types/react-dom": "^15.5.4",
+    "electron": "^1.7.5",
+    "fuse-box": "^2.2.2",
+    "typescript": "^2.5.2"
+  },
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
 }
