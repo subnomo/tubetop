@@ -17,10 +17,10 @@ Sparky.task('default', ['copy-html'], () => {
         output: 'dist/$name.js',
         target: 'electron',
         log: isProduction,
+        hash: isProduction,
         cache: !isProduction,
         sourceMaps: !isProduction,
         tsConfig: 'tsconfig.json',
-        serverBundle: true,
         shim: {
           electron: { exports: "global.require('electron')" },
         },
@@ -32,7 +32,7 @@ Sparky.task('default', ['copy-html'], () => {
     }
 
     // Bundle main electron code
-    const appBundle = fuse.bundle('app').instructions('>index.ts');
+    const appBundle = fuse.bundle('app').instructions('> [index.ts]');
 
     // Watch
     if (!isProduction) {
