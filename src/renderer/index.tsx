@@ -1,14 +1,22 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'react-router-redux';
 
-class Hello extends React.Component {
-    render() {
-        return (
-            <div>
-                <h2>Hello, world!</h2>
-            </div>
-        );
-    }
-}
+// Setup hot reloading
+import './hmr';
 
-ReactDOM.render(<Hello />, document.getElementById('root'));
+// Import root container
+import App from './containers/App';
+
+// Import stateful components
+import { store, history } from './store';
+
+ReactDOM.render(
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <App />
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('app')
+);
