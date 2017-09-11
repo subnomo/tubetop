@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
-import createHistory from 'history/createBrowserHistory';
+import createHashHistory from 'history/createHashHistory';
 import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -47,5 +47,5 @@ export function configureStore(history: any, initialState = {}) {
 }
 
 // Create redux store with history
-export const history = createHistory();
+export const history = createHashHistory();
 export const store = configureStore(history);
