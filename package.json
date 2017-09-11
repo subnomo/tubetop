@@ -20,6 +20,7 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
+    "dotenv": "^4.0.0",
     "history": "^4.7.2",
     "immutable": "^3.8.1",
     "material-ui": "next",
