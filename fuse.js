@@ -17,39 +17,29 @@ Sparky.task('copy-html', () => {
   return Sparky.src('src/renderer/index.html').dest('dist/$name');
 });
 
-Sparky.task('default', ['copy-html'], () => {
-  const fuse = FuseBox.init({
-    homeDir: 'src/',
-    output: 'dist/$name.js',
-    target: 'electron',
-    log: isProduction,
-    hash: isProduction,
-    cache: !isProduction,
-    sourceMaps: !isProduction,
-    tsConfig: 'tsconfig.json',
-    shim: {
-      electron: { exports: "global.require('electron')" },
-    },
-    plugins: [
-      EnvPlugin({ NODE_ENV: isProduction ? 'production' : 'development' }),
-    ]
-  });
+const fuse = FuseBox.init({
+  homeDir: 'src/',
+  output: 'dist/$name.js',
+  target: 'electron',
+  log: isProduction,
+  hash: isProduction,
+  cache: !isProduction,
+  sourceMaps: !isProduction,
+  tsConfig: 'tsconfig.json',
+  shim: {
+    electron: { exports: "global.require('electron')" },
+  },
+  plugins: [
+    EnvPlugin({ NODE_ENV: isProduction ? 'production' : 'development' }),
+  ]
+});
 
-  // Start the hot-reload server
-  if (!isProduction) {
-    fuse.dev({ port: DEV_PORT, httpServer: false });
-  }
+function bundle() {
+    // Bundle main electron code
+    const appBundle = fuse.bundle('app').instructions('> [index.ts]');
 
-  // Bundle main electron code
-  const appBundle = fuse.bundle('app').instructions('> [index.ts]');
-
-  // Watch
-  if (!isProduction) {
-    appBundle.watch();
-  }
-
-  // Bundle electron renderer code
-  const rendererBundle = fuse
+    // Bundle electron renderer code
+    const rendererBundle = fuse
     .bundle('renderer')
     .instructions('> [renderer/index.tsx] +fuse-box-css')
     .plugin(CSSPlugin())
@@ -60,8 +50,29 @@ Sparky.task('default', ['copy-html'], () => {
         resolve: 'assets/',
     }));
 
+    return {
+      appBundle,
+      rendererBundle,
+    };
+}
+
+Sparky.task('bundle', ['copy-html'], () => {
+  bundle();
+  fuse.run();
+});
+
+Sparky.task('default', ['copy-html'], () => {
+  // Start the hot-reload server
+  if (!isProduction) {
+    fuse.dev({ port: DEV_PORT, httpServer: false });
+  }
+
+  const { appBundle, rendererBundle } = bundle();
+
   // Watch and hot-reload
   if (!isProduction) {
+    appBundle.watch();
+
     rendererBundle.watch();
     rendererBundle.hmr();
   }
