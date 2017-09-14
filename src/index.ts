@@ -6,7 +6,7 @@ import installExtension, {
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 
-let win: Electron.BrowserWindow;
+let win: Electron.BrowserWindow = null;
 
 function createWindow() {
   win = new BrowserWindow({ width: 800, height: 600 });
