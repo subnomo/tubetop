@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import * as querystring from 'querystring';
 import * as _ from 'lodash';
 import * as Autosuggest from 'react-autosuggest';
@@ -7,7 +8,10 @@ import * as parse from 'autosuggest-highlight/parse';
 import { MenuItem } from 'material-ui/Menu';
 import Paper from 'material-ui/Paper';
 import SearchIcon from 'material-ui-icons/Search';
+
 import { SearchBox, SearchInput, AutosuggestWrapper } from './styles';
+import { AppAction, addSong } from '../../containers/App/actions';
+import { SongData } from '../Song';
 
 interface SearchParams {
   key: string;
@@ -16,6 +20,7 @@ interface SearchParams {
   type?: string;
   maxResults?: number;
   relatedToVideoId?: string;
+  id?: string;
 }
 
 // Search YouTube with given search terms
@@ -36,6 +41,84 @@ async function search(searchTerm: string): Promise<any[]> {
   return data.items;
 }
 
+// Search YouTube but also get extra info (video length, etc.)
+async function searchExtra(searchTerm: string): Promise<any[]> {
+  let items = await search(searchTerm);
+  let videoIDs: string[] = [];
+  let nonVideoIndices: number[] = [];
+
+  items.forEach((item: any, index: number) => {
+    if (item.id.kind === 'youtube#video') {
+      videoIDs.push(item.id.videoId);
+    } else {
+      nonVideoIndices.push(index);
+    }
+  });
+
+  // Remove non videos from the items
+  for (let i = nonVideoIndices.length - 1; i >= 0; i--) {
+    items.splice(nonVideoIndices[i], 1);
+  }
+
+  const params: SearchParams = {
+    part: 'contentDetails',
+    key: process.env.YOUTUBE_API_KEY,
+    id: videoIDs.join(','),
+  };
+
+  // Build query and search YouTube
+  const query = querystring.stringify(params);
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?${query}`);
+  const data: any = await res.json();
+
+  // Add contentDetails to existing items
+  data.items.forEach((item: any, index: number) => {
+    items[index].contentDetails = item.contentDetails;
+  });
+
+  return items;
+}
+
+// Convert ISO 8601 duration to seconds
+function parseDuration(duration: string): number {
+  let seconds = 0;
+
+  let number = '';
+  let onNumber = false;
+
+  for (let i = 0; i < duration.length; i++) {
+    const c = duration[i];
+
+    // If the character is a number, parse piece of duration
+    if (!isNaN(parseInt(c))) {
+      number += c;
+      onNumber = true;
+    } else {
+      // If we moved off a number, parse that portion
+      if (onNumber) {
+        const num = parseInt(number);
+
+        switch (c) {
+          case 'H':
+            seconds += num * 3600;
+            break;
+          case 'M':
+            seconds += num * 60;
+            break;
+          case 'S':
+            seconds += num;
+            break;
+        }
+
+        number = '';
+        onNumber = false;
+      }
+    }
+  }
+
+  return seconds;
+}
+
 // react-autosuggest
 function getSuggestionValue(suggestion: any): string {
   return suggestion.snippet.title;
@@ -45,17 +128,21 @@ async function getSuggestions(value: string): Promise<any[]> {
   const inputValue = value.trim().toLowerCase();
 
   if (inputValue.length === 0) return [];
-  return await search(inputValue);
+  return await searchExtra(inputValue);
 }
 
 // Component Class
+
+interface IProps {
+  dispatch: (action: AppAction) => void;
+}
 
 interface IState {
   value: string;
   suggestions: any[];
 }
 
-export default class Search extends React.PureComponent<{}, IState> {
+export class Search extends React.PureComponent<IProps, IState> {
   private debouncedHSFR: (value: string) => void;
 
   constructor() {
@@ -94,7 +181,14 @@ export default class Search extends React.PureComponent<{}, IState> {
   handleSuggestionSelected = (e: any, opts: any) => {
     const { suggestion } = opts;
 
-    // TODO: Dispatch song to Redux store
+    const song: SongData = {
+      id: suggestion.id.videoId,
+      title: suggestion.snippet.title,
+      thumb: suggestion.snippet.thumbnails.default.url,
+      duration: parseDuration(suggestion.contentDetails.duration),
+    };
+
+    this.props.dispatch(addSong(song));
   }
 
   renderInput = (inputProps: any) => {
@@ -177,3 +271,5 @@ export default class Search extends React.PureComponent<{}, IState> {
     );
   }
 }
+
+export default connect()(Search as any);

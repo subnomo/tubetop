@@ -2,6 +2,7 @@ import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import MenuIcon from 'material-ui-icons/Menu';
+
 import { Root, MenuButton, FlexTypo, HomeLink } from './styles';
 import Search from '../search';
 
