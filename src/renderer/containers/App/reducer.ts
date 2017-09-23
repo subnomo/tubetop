@@ -1,17 +1,17 @@
 import { fromJS } from 'immutable';
 
+import { ADD_SONG } from './constants';
+import { AppAction } from './actions';
+
 const initialState = fromJS({
-  loading: false,
-  error: false,
-  currentUser: false,
-  userData: {
-    repositories: false
-  }
+  songs: [],
 });
 
-export default function appReducer(state = initialState, action: any) {
+export default function appReducer(state = initialState, action: AppAction) {
   switch (action.type) {
-    // Actions
+    case ADD_SONG:
+      return state
+        .set('songs', [...state.get('songs'), action.song]);
     default:
       return state;
   }
