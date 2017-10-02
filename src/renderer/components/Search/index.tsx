@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as querystring from 'querystring';
 import * as _ from 'lodash';
+import * as ulid from 'ulid';
 import * as Autosuggest from 'react-autosuggest';
 import * as match from 'autosuggest-highlight/match';
 import * as parse from 'autosuggest-highlight/parse';
@@ -93,26 +94,24 @@ function parseDuration(duration: string): number {
     if (!isNaN(parseInt(c))) {
       number += c;
       onNumber = true;
-    } else {
+    } else if (onNumber) {
       // If we moved off a number, parse that portion
-      if (onNumber) {
-        const num = parseInt(number);
+      const num = parseInt(number);
 
-        switch (c) {
-          case 'H':
-            seconds += num * 3600;
-            break;
-          case 'M':
-            seconds += num * 60;
-            break;
-          case 'S':
-            seconds += num;
-            break;
-        }
-
-        number = '';
-        onNumber = false;
+      switch (c) {
+        case 'H':
+          seconds += num * 3600;
+          break;
+        case 'M':
+          seconds += num * 60;
+          break;
+        case 'S':
+          seconds += num;
+          break;
       }
+
+      number = '';
+      onNumber = false;
     }
   }
 
@@ -133,7 +132,7 @@ async function getSuggestions(value: string): Promise<any[]> {
 
 // Component Class
 
-interface IProps {
+interface IProps extends React.Props<Search> {
   dispatch: (action: AppAction) => void;
 }
 
@@ -182,10 +181,12 @@ export class Search extends React.PureComponent<IProps, IState> {
     const { suggestion } = opts;
 
     const song: SongData = {
+      key: ulid(),
       id: suggestion.id.videoId,
       title: suggestion.snippet.title,
       thumb: suggestion.snippet.thumbnails.default.url,
       duration: parseDuration(suggestion.contentDetails.duration),
+      playing: false,
     };
 
     this.props.dispatch(addSong(song));
@@ -247,27 +248,24 @@ export class Search extends React.PureComponent<IProps, IState> {
     let { value, suggestions } = this.state;
 
     return (
-      <div>
-
-        <AutosuggestWrapper>
-          <Autosuggest
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-            onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-            onSuggestionSelected={this.handleSuggestionSelected}
-            getSuggestionValue={getSuggestionValue}
-            renderSuggestionsContainer={this.renderSuggestionsContainer}
-            renderSuggestion={this.renderSuggestion}
-            renderInputComponent={this.renderInput}
-            inputProps={{
-              placeholder: 'Search...',
-              value,
-              onChange: this.handleChange,
-              disableUnderline: true,
-            }}
-          />
-        </AutosuggestWrapper>
-      </div>
+      <AutosuggestWrapper>
+        <Autosuggest
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+          onSuggestionSelected={this.handleSuggestionSelected}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestionsContainer={this.renderSuggestionsContainer}
+          renderSuggestion={this.renderSuggestion}
+          renderInputComponent={this.renderInput}
+          inputProps={{
+            placeholder: 'Search...',
+            value,
+            onChange: this.handleChange,
+            disableUnderline: true,
+          }}
+        />
+      </AutosuggestWrapper>
     );
   }
 }

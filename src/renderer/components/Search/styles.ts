@@ -53,6 +53,7 @@ export const AutosuggestWrapper = styled.div`
 
   .react-autosuggest__suggestions-container--open {
     position: absolute;
+    z-index: 1;
   }
 
   .react-autosuggest__suggestions-list {

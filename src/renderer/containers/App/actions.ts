@@ -7,7 +7,7 @@ export interface AppAction {
   song?: SongData;
 }
 
-export function addSong(song: AppAction['song']): AppAction {
+export function addSong(song: SongData): AppAction {
   return {
     type: ADD_SONG,
     song,
