@@ -1,10 +1,20 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 
-import installExtension, {
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} from 'electron-devtools-installer';
+const debug = process.env.NODE_ENV === 'development';
+let installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS;
+
+if (debug) {
+  let {
+    default: install,
+    REACT_DEVELOPER_TOOLS: rdt,
+    REDUX_DEVTOOLS: rd,
+  } = require('electron-devtools-installer');
+
+  installExtension = install;
+  REACT_DEVELOPER_TOOLS = rdt;
+  REDUX_DEVTOOLS = rd;
+}
 
 let win: Electron.BrowserWindow = null;
 
@@ -12,16 +22,19 @@ function createWindow() {
   win = new BrowserWindow({ width: 800, height: 600 });
 
   // Install dev extensions
-  installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS])
-    .then((name: string[]) => console.log(`Added Extensions: ${name.join(', ')}`))
-    .catch((err: any) => console.log('An error occurred: ', err));
+  if (debug) {
+    console.log(REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS);
+    installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS])
+      .then((name: string[]) => console.log(`Added Extensions: ${name.join(', ')}`))
+      .catch((err: any) => console.log('An error occurred: ', err));
+  }
 
   // Load index.html
   const appPath = app.getAppPath();
   win.loadURL(path.join(appPath, 'dist/index.html'));
 
   // Open dev tools
-  win.webContents.openDevTools();
+  if (debug) win.webContents.openDevTools();
 
   // Dereference win on close
   win.on('closed', () => {

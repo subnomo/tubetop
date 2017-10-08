@@ -9,6 +9,7 @@
   "devDependencies": {
     "@types/history": "^4.6.0",
     "@types/lodash": "^4.14.74",
+    "@types/rc-slider": "^8.1.1",
     "@types/react": "^16.0.7",
     "@types/react-autosuggest": "^8.0.2",
     "@types/react-dom": "^15.5.5",
@@ -17,7 +18,7 @@
     "@types/react-router-redux": "^5.0.8",
     "@types/redux-immutable": "^3.0.37",
     "electron-devtools-installer": "^2.2.0",
-    "fuse-box": "^2.2.3",
+    "fuse-box": "^2.3.2",
     "typescript": "^2.5.2"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "lodash": "^4.17.4",
     "material-ui": "^1.0.0-beta.12",
     "material-ui-icons": "^1.0.0-beta.5",
+    "rc-slider": "^8.3.1",
     "react": "^16.0.0",
     "react-autosuggest": "^9.3.2",
     "react-dom": "^16.0.0",
