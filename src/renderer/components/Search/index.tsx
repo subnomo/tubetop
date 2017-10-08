@@ -236,7 +236,6 @@ export class Search extends React.PureComponent<IProps, IState> {
 
   renderSuggestionsContainer = (opts: { containerProps: any, children: any }) => {
     const { containerProps, children } = opts;
-
     return (
       <Paper {...containerProps} square>
         {children}

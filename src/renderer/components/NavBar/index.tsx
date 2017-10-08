@@ -8,13 +8,14 @@ import Search from '../search';
 
 interface IProps extends React.Props<NavBar> {
   title: string;
+  color?: string;
 }
 
 export default class NavBar extends React.PureComponent<IProps, {}> {
   render() {
     return (
       <Root>
-        <AppBar position="static">
+        <AppBar position="static" style={{ backgroundColor: this.props.color }}>
           <Toolbar>
             <MenuButton color="contrast" aria-label="Menu">
               <MenuIcon />
