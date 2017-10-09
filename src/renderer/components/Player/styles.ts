@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { grey } from 'material-ui/colors';
 import IconButton from 'material-ui/IconButton';
 import PlayCircleFilled from 'material-ui-icons/PlayCircleFilled';
+import PauseCircleFilled from 'material-ui-icons/PauseCircleFilled';
 
 import { primary } from '../../colors';
 
@@ -22,13 +23,55 @@ export const Controls = styled.div`
   justify-content: center;
 `;
 
+const buttonSize = 60;
+
 export const PlayButton = styled(IconButton)`
-  width: 80px !important;
-  height: 80px !important;
+  width: ${buttonSize + 10}px !important;
+  height: ${buttonSize + 10}px !important;
 `;
 
 export const PlayIcon = styled(PlayCircleFilled)`
   color: ${primary};
-  width: 70px !important;
-  height: 70px !important;
+  width: ${buttonSize}px !important;
+  height: ${buttonSize}px !important;
 `;
+
+export const PauseIcon = styled(PauseCircleFilled)`
+  color: ${primary};
+  width: ${buttonSize}px !important;
+  height: ${buttonSize}px !important;
+`;
+
+export const VolumeContainer = styled.div`
+  width: 150px;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+  margin: auto;
+  margin-right: 10px;
+  right: 10%;
+
+  .rc-slider {
+    display: inline;
+    position: absolute !important;
+    top: 22px;
+  }
+`;
+
+export const TimerContainer = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  top: 0;
+  left: 10%;
+`;
+
+export const sliderStyle = {
+  position: 'absolute',
+  top: 0,
+  backgroundColor: primary,
+  borderColor: primary,
+};

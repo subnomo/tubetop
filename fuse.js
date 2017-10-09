@@ -34,7 +34,7 @@ function initFuse() {
       electron: { exports: "global.require('electron')" },
     },
     plugins: [
-      EnvPlugin({ ...process.env }),
+      EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
       [CSSResourcePlugin(), CSSPlugin()],
     ]
   });

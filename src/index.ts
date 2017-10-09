@@ -23,7 +23,6 @@ function createWindow() {
 
   // Install dev extensions
   if (debug) {
-    console.log(REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS);
     installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS])
       .then((name: string[]) => console.log(`Added Extensions: ${name.join(', ')}`))
       .catch((err: any) => console.log('An error occurred: ', err));
