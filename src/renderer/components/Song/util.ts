@@ -5,7 +5,7 @@ function padLeft(num: number): string {
 export function parseTime(time: number): string {
   const hours = Math.floor(time / (60 * 60));
   const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
+  const seconds = Math.floor(time % 60);
 
   let formattedTime = `${padLeft(minutes)}:${padLeft(seconds)}`;
 

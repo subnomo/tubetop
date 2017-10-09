@@ -9,6 +9,7 @@
   "devDependencies": {
     "@types/history": "^4.6.0",
     "@types/lodash": "^4.14.74",
+    "@types/node": "^8.0.33",
     "@types/rc-slider": "^8.1.1",
     "@types/react": "^16.0.7",
     "@types/react-autosuggest": "^8.0.2",
@@ -24,12 +25,12 @@
   "dependencies": {
     "autosuggest-highlight": "^3.1.0",
     "dotenv": "^4.0.0",
-    "electron": "^1.7.5",
+    "electron": "1.6.14",
     "history": "^4.7.2",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",
-    "material-ui": "^1.0.0-beta.12",
-    "material-ui-icons": "^1.0.0-beta.5",
+    "material-ui": "^1.0.0-beta.16",
+    "material-ui-icons": "^1.0.0-beta.15",
     "rc-slider": "^8.3.1",
     "react": "^16.0.0",
     "react-autosuggest": "^9.3.2",
@@ -44,6 +45,7 @@
     "redux-saga": "^0.15.6",
     "reselect": "^3.0.1",
     "styled-components": "^2.1.2",
-    "ulid": "^1.0.0"
+    "ulid": "^1.0.0",
+    "ytdl-core": "^0.18.0"
   }
 }
