@@ -35,6 +35,7 @@ interface IState {
   progress: number;
   time: number;
   volume: number;
+  savedVolume: number;
   playing: boolean;
   paused: boolean;
 }
@@ -50,6 +51,7 @@ class Player extends React.PureComponent<IProps, IState> {
       progress: 0,
       time: 0,
       volume: 100,
+      savedVolume: 100,
       playing: false,
       paused: false,
     };
@@ -244,14 +246,39 @@ class Player extends React.PureComponent<IProps, IState> {
     });
   }
 
+  handleVolumeClick = () => {
+    const { volume, savedVolume } = this.state;
+
+    if (volume !== 0) {
+      this.setState({
+        volume: 0,
+        savedVolume: volume,
+      });
+    } else {
+      this.setState({
+        volume: savedVolume,
+      });
+    }
+  }
+
   render() {
     const { songs } = this.props;
-    const { playing, paused, progress, current } = this.state;
+    const { playing, paused, progress, current, volume } = this.state;
 
     let duration = 0;
 
     if (songs[current]) {
       duration = songs[current].duration;
+    }
+
+    let volumeIcon;
+
+    if (volume === 0) {
+      volumeIcon = <VolumeMute />;
+    } else if (volume < 50) {
+      volumeIcon = <VolumeDown />;
+    } else {
+      volumeIcon = <VolumeUp />;
     }
 
     return (
@@ -297,12 +324,12 @@ class Player extends React.PureComponent<IProps, IState> {
 
         {/* Volume control */}
         <VolumeContainer>
-          <IconButton aria-label="Mute">
-            <VolumeUp />
+          <IconButton aria-label="Mute" onClick={this.handleVolumeClick}>
+            {volumeIcon}
           </IconButton>
 
           <Slider
-            value={this.state.volume}
+            value={volume}
             onChange={this.handleChangeVolume}
             trackStyle={sliderStyle as any}
             railStyle={{ ...sliderStyle as any, backgroundColor: '' }}
