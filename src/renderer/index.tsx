@@ -3,10 +3,6 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
-// Setup environmental variables
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 // Setup hot reloading
 import './hmr';
 

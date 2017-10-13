@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as querystring from 'querystring';
-import * as debounce from 'lodash/debounce';
+import { debounce } from 'lodash';
 import * as ulid from 'ulid';
 import * as Autosuggest from 'react-autosuggest';
 import * as match from 'autosuggest-highlight/match';
