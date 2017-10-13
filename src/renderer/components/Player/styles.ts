@@ -71,6 +71,7 @@ export const TimerContainer = styled.div`
 
 export const sliderStyle = {
   position: 'absolute',
+  zIndex: 5,
   top: 0,
   backgroundColor: primary,
   borderColor: primary,
