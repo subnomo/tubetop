@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as querystring from 'querystring';
-import * as _ from 'lodash';
+import * as debounce from 'lodash/debounce';
 import * as ulid from 'ulid';
 import * as Autosuggest from 'react-autosuggest';
 import * as match from 'autosuggest-highlight/match';
@@ -152,7 +152,7 @@ export class Search extends React.PureComponent<IProps, IState> {
       suggestions: [],
     };
 
-    this.debouncedHSFR = _.debounce(async (value: string) => {
+    this.debouncedHSFR = debounce(async (value: string) => {
       // Perform search and save results to state
       this.setState({
         suggestions: await getSuggestions(value),

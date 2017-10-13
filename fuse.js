@@ -30,9 +30,6 @@ function initFuse() {
     cache: !isProduction,
     sourceMaps: !isProduction,
     tsConfig: 'tsconfig.json',
-    shim: {
-      electron: { exports: "global.require('electron')" },
-    },
     plugins: [
       EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
       [CSSResourcePlugin(), CSSPlugin()],

@@ -4,7 +4,7 @@ import Toolbar from 'material-ui/Toolbar';
 import MenuIcon from 'material-ui-icons/Menu';
 
 import { Root, MenuButton, FlexTypo, HomeLink } from './styles';
-import Search from '../search';
+import Search from '../Search';
 
 interface IProps extends React.Props<NavBar> {
   title: string;
