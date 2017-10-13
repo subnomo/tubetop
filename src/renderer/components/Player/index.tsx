@@ -96,6 +96,7 @@ class Player extends React.PureComponent<IProps, IState> {
             currentKey: nextProps.songs[i].key,
           }, () => { this.play(nextProps); });
 
+          document.title = `${nextProps.songs[i].title} - tubetop`;
           break;
         }
       }
@@ -121,6 +122,7 @@ class Player extends React.PureComponent<IProps, IState> {
           }, () => { this.play(nextProps); });
 
           newSong = true;
+          document.title = `${nextProps.songs[i].title} - tubetop`;
           break;
         }
       }
@@ -138,6 +140,8 @@ class Player extends React.PureComponent<IProps, IState> {
           playing: false,
           paused: false,
         });
+
+        document.title = 'tubetop';
       }
     }
 
