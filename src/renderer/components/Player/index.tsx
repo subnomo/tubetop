@@ -52,8 +52,8 @@ class Player extends React.PureComponent<IProps, IState> {
       currentKey: '',
       progress: 0,
       time: 0,
-      volume: 100,
-      savedVolume: 100,
+      volume: 50,
+      savedVolume: 50,
       playing: false,
       paused: false,
     };
@@ -188,23 +188,19 @@ class Player extends React.PureComponent<IProps, IState> {
         // Get audio only formats
         const audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
 
-        let highestQuality = {
-          bitrate: 0,
-          index: 0,
-        };
+        let hqIndex = 0;
+        let maxBitrate = 0;
 
         // Get best possible quality
         audioFormats.forEach((format, i) => {
-          if (format.audioBitrate > highestQuality.bitrate) {
-            highestQuality = {
-              bitrate: format.audioBitrate,
-              index: i,
-            };
+          if (format.audioBitrate > maxBitrate) {
+            hqIndex = i;
+            maxBitrate = format.audioBitrate;
           }
         });
 
         // Play the song
-        this.audio.src = audioFormats[highestQuality.index].url;
+        this.audio.src = audioFormats[hqIndex].url;
         this.audio.play();
 
         this.setState({
@@ -276,7 +272,7 @@ class Player extends React.PureComponent<IProps, IState> {
     const progress = (this.audio.currentTime / songs[current].duration) * 100;
     const roundedTime = Math.ceil(this.audio.currentTime);
 
-    if (roundedTime === songs[current].duration) {
+    if (roundedTime >= songs[current].duration) {
       this.skipNext();
     }
 
