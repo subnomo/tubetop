@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 
 const debug = process.env.NODE_ENV === 'development';
 let installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS;
@@ -33,6 +33,31 @@ function createWindow() {
 
   // Open dev tools
   if (debug) win.webContents.openDevTools();
+
+  // Register media buttons
+  globalShortcut.register('MediaPlayPause', () => {
+    if (win === null) return;
+
+    win.webContents.send('play-pause');
+  });
+
+  globalShortcut.register('MediaStop', () => {
+    if (win === null) return;
+
+    win.webContents.send('stop');
+  });
+
+  globalShortcut.register('MediaNextTrack', () => {
+    if (win === null) return;
+
+    win.webContents.send('next-track');
+  });
+
+  globalShortcut.register('MediaPreviousTrack', () => {
+    if (win === null) return;
+
+    win.webContents.send('previous-track');
+  });
 
   // Dereference win on close
   win.on('closed', () => {

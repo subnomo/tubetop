@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { ipcRenderer } from 'electron';
 import * as Slider from 'rc-slider/lib/Slider';
 import * as ytdl from 'ytdl-core';
 import IconButton from 'material-ui/IconButton';
@@ -57,6 +58,18 @@ class Player extends React.PureComponent<IProps, IState> {
       playing: false,
       paused: false,
     };
+
+    ipcRenderer.on('play-pause', () => {
+      if (this.state.playing && !this.state.paused) {
+        this.pause();
+      } else {
+        this.play();
+      }
+    });
+
+    ipcRenderer.on('stop', this.stop);
+    ipcRenderer.on('next-track', this.skipNext);
+    ipcRenderer.on('previous-track', this.skipPrevious);
   }
 
   componentWillReceiveProps(nextProps: IProps) {
@@ -96,7 +109,6 @@ class Player extends React.PureComponent<IProps, IState> {
             currentKey: nextProps.songs[i].key,
           }, () => { this.play(nextProps); });
 
-          document.title = `${nextProps.songs[i].title} - tubetop`;
           break;
         }
       }
@@ -122,26 +134,13 @@ class Player extends React.PureComponent<IProps, IState> {
           }, () => { this.play(nextProps); });
 
           newSong = true;
-          document.title = `${nextProps.songs[i].title} - tubetop`;
           break;
         }
       }
 
       // If no new song has been played, just stop the current song
       if (!newSong) {
-        this.audio.pause();
-        this.audio.currentTime = 0;
-
-        this.setState({
-          current: 0,
-          currentKey: '',
-          progress: 0,
-          time: 0,
-          playing: false,
-          paused: false,
-        });
-
-        document.title = 'tubetop';
+        this.stop();
       }
     }
 
@@ -182,6 +181,8 @@ class Player extends React.PureComponent<IProps, IState> {
         current,
         currentKey,
       });
+
+      document.title = `${songs[current].title} - tubetop`;
 
       const song = songs[current];
 
@@ -236,6 +237,22 @@ class Player extends React.PureComponent<IProps, IState> {
         paused: true,
       });
     }
+  }
+
+  stop = () => {
+    this.audio.pause();
+    this.audio.currentTime = 0;
+
+    this.setState({
+      current: 0,
+      currentKey: '',
+      progress: 0,
+      time: 0,
+      playing: false,
+      paused: false,
+    });
+
+    document.title = 'tubetop';
   }
 
   skipPrevious = () => {
