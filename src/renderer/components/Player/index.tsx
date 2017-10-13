@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Slider from 'rc-slider';
+import * as Slider from 'rc-slider/lib/Slider';
 import * as ytdl from 'ytdl-core';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';

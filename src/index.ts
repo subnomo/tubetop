@@ -1,5 +1,4 @@
 import { app, BrowserWindow } from 'electron';
-import * as path from 'path';
 
 const debug = process.env.NODE_ENV === 'development';
 let installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS;
@@ -30,7 +29,7 @@ function createWindow() {
 
   // Load index.html
   const appPath = app.getAppPath();
-  win.loadURL(path.join(appPath, 'dist/index.html'));
+  win.loadURL(`file://${appPath}/dist/index.html`);
 
   // Open dev tools
   if (debug) win.webContents.openDevTools();
