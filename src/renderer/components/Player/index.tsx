@@ -32,6 +32,7 @@ interface IProps extends React.Props<Player> {
 
 interface IState {
   current: number;
+  currentKey: string;
   progress: number;
   time: number;
   volume: number;
@@ -48,6 +49,7 @@ class Player extends React.PureComponent<IProps, IState> {
 
     this.state = {
       current: 0,
+      currentKey: '',
       progress: 0,
       time: 0,
       volume: 100,
@@ -59,10 +61,29 @@ class Player extends React.PureComponent<IProps, IState> {
 
   componentWillReceiveProps(nextProps: IProps) {
     const { songs } = this.props;
-    const { current } = this.state;
+    const { currentKey } = this.state;
 
-    const currentPlaying = songs.length > 0 && songs[current].playing;
-    const nextPlaying = nextProps.songs.length > 0 && nextProps.songs[current].playing;
+    // Check if the current song is playing
+    let currentPlaying = false;
+
+    for (let i = 0; i < songs.length; i++) {
+      if (songs[i].key === currentKey) {
+        currentPlaying = songs[i].playing;
+        break;
+      }
+    }
+
+    // Check if the current song is playing in nextProps
+    let nextPlaying = false;
+    let current = this.state.current;
+
+    for (let i = 0; i < nextProps.songs.length; i++) {
+      if (nextProps.songs[i].key === currentKey) {
+        nextPlaying = nextProps.songs[i].playing;
+        current = i;
+        break;
+      }
+    }
 
     // If a new song is playing, find and play it
     if (!currentPlaying) {
@@ -72,6 +93,7 @@ class Player extends React.PureComponent<IProps, IState> {
 
           this.setState({
             current: i,
+            currentKey: nextProps.songs[i].key,
           }, () => { this.play(nextProps); });
 
           break;
@@ -79,8 +101,10 @@ class Player extends React.PureComponent<IProps, IState> {
       }
     }
 
-    // If the song has changed, reset state and play
-    if (currentPlaying && !nextPlaying) {
+    // Else if the song has changed, reset state and play the new song
+    else if (!nextPlaying) {
+      let newSong = false;
+
       for (let i = 0; i < nextProps.songs.length; i++) {
         if (i === current) continue;
 
@@ -89,15 +113,39 @@ class Player extends React.PureComponent<IProps, IState> {
 
           this.setState({
             current: i,
+            currentKey: nextProps.songs[i].key,
             progress: 0,
             time: 0,
             playing: false,
             paused: false,
           }, () => { this.play(nextProps); });
 
+          newSong = true;
           break;
         }
       }
+
+      // If no new song has been played, just stop the current song
+      if (!newSong) {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+
+        this.setState({
+          current: 0,
+          currentKey: '',
+          progress: 0,
+          time: 0,
+          playing: false,
+          paused: false,
+        });
+      }
+    }
+
+    // Else, make sure index is up to date
+    else {
+      this.setState({
+        current,
+      });
     }
   }
 
@@ -115,15 +163,20 @@ class Player extends React.PureComponent<IProps, IState> {
     if (!playing) {
       // Find the currently playing song
       let current = 0;
+      let currentKey = '';
 
-      songs.forEach((song, i) => {
-        if (song.playing) {
+      for (let i = 0; i < songs.length; i++) {
+        if (songs[i].playing) {
           current = i;
+          currentKey = songs[i].key;
+
+          break;
         }
-      });
+      }
 
       this.setState({
         current,
+        currentKey,
       });
 
       const song = songs[current];
