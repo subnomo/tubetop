@@ -11,6 +11,7 @@ import Paper from 'material-ui/Paper';
 import SearchIcon from 'material-ui-icons/Search';
 
 import { SearchBox, SearchInput, AutosuggestWrapper } from './styles';
+import { isYoutubeLink, isYoutubePlayList } from './util';
 import { AppAction, addSong } from '../../containers/App/actions';
 import { SongData } from '../Song';
 
@@ -22,24 +23,60 @@ interface SearchParams {
   maxResults?: number;
   relatedToVideoId?: string;
   id?: string;
+  playlistId?: string;
 }
 
 // Search YouTube with given search terms
-async function search(searchTerm: string): Promise<any[]> {
-  const params: SearchParams = {
-    part: 'snippet',
-    key: process.env.YOUTUBE_API_KEY,
-    q: searchTerm,
-    maxResults: 10,
-  };
+async function search(searchTerm: string, part = 'snippet'): Promise<any[]> {
+  if (isYoutubeLink(searchTerm)) {
+    const qs = searchTerm.split('?')[1];
 
-  // Build query and search YouTube
-  const query = querystring.stringify(params);
-  const res = await fetch(`https://www.googleapis.com/youtube/v3/search?${query}`);
-  const data: any = await res.json();
+    const params: SearchParams = {
+      part,
+      key: process.env.YOUTUBE_API_KEY,
+      id: querystring.parse(qs).v,
+    };
 
-  // Return an array of all video objects
-  return data.items;
+    // Build query and search YouTube
+    const query = querystring.stringify(params);
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?${query}`);
+    const data: any = await res.json();
+
+    // Return an array of all video objects
+    return data.items;
+  } else if (isYoutubePlayList(searchTerm)) {
+    const qs = searchTerm.split('?')[1];
+
+    const params: SearchParams = {
+      part,
+      key: process.env.YOUTUBE_API_KEY,
+      maxResults: 50,
+      playlistId: querystring.parse(qs).list,
+    };
+
+    // Build query and search YouTube
+    const query = querystring.stringify(params);
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?${query}`);
+    const data: any = await res.json();
+
+    // Return an array of all video objects
+    return data.items;
+  } else {
+    const params: SearchParams = {
+      part,
+      key: process.env.YOUTUBE_API_KEY,
+      q: searchTerm,
+      maxResults: 10,
+    };
+
+    // Build query and search YouTube
+    const query = querystring.stringify(params);
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/search?${query}`);
+    const data: any = await res.json();
+
+    // Return an array of all video objects
+    return data.items;
+  }
 }
 
 // Search YouTube but also get extra info (video length, etc.)
@@ -51,6 +88,11 @@ async function searchExtra(searchTerm: string): Promise<any[]> {
   items.forEach((item: any, index: number) => {
     if (item.id.kind === 'youtube#video') {
       videoIDs.push(item.id.videoId);
+    } else if (item.kind === 'youtube#video') {
+      videoIDs.push(item.id);
+    } else if (item.kind === 'youtube#playlistItem') {
+      item.id = item.snippet.resourceId.videoId;
+      videoIDs.push(item.id);
     } else {
       nonVideoIndices.push(index);
     }
@@ -124,7 +166,7 @@ function getSuggestionValue(suggestion: any): string {
 }
 
 async function getSuggestions(value: string): Promise<any[]> {
-  const inputValue = value.trim().toLowerCase();
+  const inputValue = value.trim();
 
   if (inputValue.length === 0) return [];
   return await searchExtra(inputValue);
@@ -166,6 +208,15 @@ export class Search extends React.PureComponent<IProps, IState> {
     });
   }
 
+  handleKeyPress = (e: any) => {
+    // On 'Enter', add all suggestions to queue
+    if (e.key === 'Enter') {
+      this.state.suggestions.forEach((suggestion, i) => {
+        this.handleSuggestionSelected(null, { suggestion });
+      });
+    }
+  }
+
   handleSuggestionsFetchRequested = ({ value }: { value: string }) => {
     // Debounce search so as to only send requests when user stops typing
     this.debouncedHSFR(value);
@@ -182,7 +233,7 @@ export class Search extends React.PureComponent<IProps, IState> {
 
     const song: SongData = {
       key: ulid(),
-      id: suggestion.id.videoId,
+      id: suggestion.id.videoId || suggestion.id,
       title: suggestion.snippet.title,
       thumb: suggestion.snippet.thumbnails.default.url,
       duration: parseDuration(suggestion.contentDetails.duration),
@@ -261,6 +312,7 @@ export class Search extends React.PureComponent<IProps, IState> {
             placeholder: 'Search...',
             value,
             onChange: this.handleChange,
+            onKeyPress: this.handleKeyPress,
             disableUnderline: true,
           }}
         />
