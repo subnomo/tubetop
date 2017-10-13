@@ -1,3 +1,3 @@
-import { cyan } from 'material-ui/colors';
+import { red } from 'material-ui/colors';
 
-export const primary = cyan['500'];
+export const primary = red['600'];
