@@ -5,8 +5,13 @@ const {
   CSSResourcePlugin,
   CopyPlugin,
   EnvPlugin,
+  QuantumPlugin,
 } = require('fuse-box');
 const { spawn } = require('child_process');
+
+// Setup environmental variables
+const dotenv = require('dotenv');
+const env = dotenv.config().parsed;
 
 const DEV_PORT = 4444;
 const ASSETS = ['*.jpg', '*.png', '*.jpeg', '*.gif', '*.svg'];
@@ -19,9 +24,10 @@ Sparky.task('copy-html', () => {
 });
 
 let fuse;
+let fuseRenderer;
 
 function initFuse() {
-  fuse = FuseBox.init({
+  const config = {
     homeDir: 'src/',
     output: 'dist/$name.js',
     target: 'electron',
@@ -30,9 +36,33 @@ function initFuse() {
     cache: !isProduction,
     sourceMaps: !isProduction,
     tsConfig: 'tsconfig.json',
+  };
+
+  const NODE_ENV = process.env.NODE_ENV;
+
+  fuse = FuseBox.init({
+    ...config,
     plugins: [
-      EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
+      EnvPlugin({ NODE_ENV, ...env }),
       [CSSResourcePlugin(), CSSPlugin()],
+      isProduction && QuantumPlugin({
+        target: 'electron',
+        bakeApiIntoBundle : 'app',
+        uglify: true,
+      }),
+    ]
+  });
+
+  fuseRenderer = FuseBox.init({
+    ...config,
+    plugins: [
+      EnvPlugin({ NODE_ENV, ...env }),
+      [CSSResourcePlugin(), CSSPlugin()],
+      isProduction && QuantumPlugin({
+        target: 'electron',
+        bakeApiIntoBundle : 'renderer',
+        uglify: true,
+      }),
     ]
   });
 }
@@ -44,7 +74,7 @@ function bundle() {
   const appBundle = fuse.bundle('app').instructions('> [index.ts]');
 
   // Bundle electron renderer code
-  const rendererBundle = fuse
+  const rendererBundle = fuseRenderer
     .bundle('renderer')
     .instructions('> [renderer/index.tsx]')
     .plugin(CopyPlugin({
@@ -70,12 +100,13 @@ Sparky.task('dist', ['copy-html'], () => {
   initFuse();
   bundle();
   fuse.run();
+  fuseRenderer.run();
 });
 
 Sparky.task('default', ['copy-html'], () => {
   // Start the hot-reload server
   if (!isProduction) {
-    fuse.dev({ port: DEV_PORT, httpServer: false });
+    fuseRenderer.dev({ port: DEV_PORT, httpServer: false });
   }
 
   const { appBundle, rendererBundle } = bundle();
@@ -89,11 +120,13 @@ Sparky.task('default', ['copy-html'], () => {
   }
 
   return fuse.run().then(() => {
-    if (!isProduction) {
-      spawn('node', [`${__dirname}/node_modules/electron/cli.js`, __dirname], {
-        stdio: 'inherit',
-      });
-    }
+    fuseRenderer.run().then(() => {
+      if (!isProduction) {
+        spawn('node', [`${__dirname}/node_modules/electron/cli.js`, __dirname], {
+          stdio: 'inherit',
+        });
+      }
+    });
   });
 });
 
