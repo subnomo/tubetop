@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
+import { ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction } from 'material-ui/List';
+import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
+import Delete from 'material-ui-icons/Delete';
 
 import { parseTime } from './util';
-import { AppAction, playSong } from '../../containers/App/actions';
+import { AppAction, playSong, removeSong } from '../../containers/App/actions';
 
 export interface SongData {
   key: string;
@@ -28,6 +30,12 @@ class Song extends React.PureComponent<IProps, {}> {
     dispatch(playSong(index));
   }
 
+  removeItem = () => {
+    const { dispatch, index } = this.props;
+
+    dispatch(removeSong(index));
+  }
+
   render() {
     const { song, index } = this.props;
 
@@ -41,6 +49,12 @@ class Song extends React.PureComponent<IProps, {}> {
           primary={song.title}
           secondary={parseTime(song.duration)}
         />
+
+        <ListItemSecondaryAction>
+          <IconButton onClick={this.removeItem}>
+            <Delete />
+          </IconButton>
+        </ListItemSecondaryAction>
       </ListItem>
     );
   }
