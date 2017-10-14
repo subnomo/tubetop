@@ -293,10 +293,6 @@ class Player extends React.PureComponent<IProps, IState> {
     const progress = (this.audio.currentTime / songs[current].duration) * 100;
     const roundedTime = Math.ceil(this.audio.currentTime);
 
-    if (roundedTime >= songs[current].duration) {
-      this.skipNext();
-    }
-
     if (roundedTime !== time) {
       this.setState({
         time: roundedTime,
@@ -356,6 +352,7 @@ class Player extends React.PureComponent<IProps, IState> {
         <audio
           ref={(audio) => { this.audio = audio; }}
           onTimeUpdate={this.handleTimeUpdate}
+          onEnded={this.skipNext}
         />
 
         {/* Seek bar */}
