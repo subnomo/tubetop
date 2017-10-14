@@ -68,7 +68,7 @@ class Player extends React.PureComponent<IProps, IState> {
     });
 
     ipcRenderer.on('stop', this.stop);
-    ipcRenderer.on('next-track', this.skipNext);
+    ipcRenderer.on('next-track', () => this.skipNext());
     ipcRenderer.on('previous-track', this.skipPrevious);
   }
 
@@ -244,8 +244,6 @@ class Player extends React.PureComponent<IProps, IState> {
     this.audio.currentTime = 0;
 
     this.setState({
-      current: 0,
-      currentKey: '',
       progress: 0,
       time: 0,
       playing: false,
@@ -261,7 +259,11 @@ class Player extends React.PureComponent<IProps, IState> {
     if (current > 0) {
       this.audio.pause();
       this.props.dispatch(playSong(current - 1));
+
+      return true;
     }
+
+    return false;
   }
 
   skipNext = () => {
@@ -270,7 +272,11 @@ class Player extends React.PureComponent<IProps, IState> {
     if (current < this.props.songs.length - 1) {
       this.audio.pause();
       this.props.dispatch(playSong(current + 1));
+
+      return true;
     }
+
+    return false;
   }
 
   seek = (pos: number) => {
@@ -291,7 +297,7 @@ class Player extends React.PureComponent<IProps, IState> {
     if (this.audio.paused) return;
 
     const progress = (this.audio.currentTime / songs[current].duration) * 100;
-    const roundedTime = Math.ceil(this.audio.currentTime);
+    const roundedTime = Math.round(this.audio.currentTime);
 
     if (roundedTime !== time) {
       this.setState({
@@ -302,6 +308,14 @@ class Player extends React.PureComponent<IProps, IState> {
     this.setState({
       progress,
     });
+  }
+
+  handleSongEnded = () => {
+    const skipped = this.skipNext();
+
+    if (!skipped) {
+      this.stop();
+    }
   }
 
   handleChangeVolume = (vol: number) => {
@@ -316,11 +330,15 @@ class Player extends React.PureComponent<IProps, IState> {
     const { volume, savedVolume } = this.state;
 
     if (volume !== 0) {
+      this.audio.volume = 0;
+
       this.setState({
         volume: 0,
         savedVolume: volume,
       });
     } else {
+      this.audio.volume = savedVolume / 100;
+
       this.setState({
         volume: savedVolume,
       });
@@ -352,7 +370,7 @@ class Player extends React.PureComponent<IProps, IState> {
         <audio
           ref={(audio) => { this.audio = audio; }}
           onTimeUpdate={this.handleTimeUpdate}
-          onEnded={this.skipNext}
+          onEnded={this.handleSongEnded}
         />
 
         {/* Seek bar */}
