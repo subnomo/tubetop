@@ -14,11 +14,11 @@ interface IState {
 }
 
 class Settings extends React.PureComponent<IProps, IState> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      youtubeAPIKey: '',
+      youtubeAPIKey: props.settings.youtubeAPIKey,
     };
   }
 
