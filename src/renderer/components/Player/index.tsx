@@ -11,7 +11,6 @@ import VolumeMute from 'material-ui-icons/VolumeMute';
 import VolumeDown from 'material-ui-icons/VolumeDown';
 import VolumeUp from 'material-ui-icons/VolumeUp';
 
-import { primary } from '../../colors';
 import { SongData } from '../Song';
 import { parseTime } from '../Song/util';
 import { AppAction, playSong } from '../../containers/App/actions';
@@ -396,6 +395,7 @@ class Player extends React.PureComponent<IProps, IState> {
           </IconButton>
 
           <PlayButton
+            color="primary"
             aria-label={playing && !paused ? "Pause" : "Play"}
             onClick={playing && !paused ? this.pause : this.playButton}
           >

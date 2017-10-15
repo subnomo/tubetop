@@ -18,7 +18,11 @@ export const FlexTypo = styled(Typography)`
   flex: 1;
 `;
 
-export const HomeLink = styled(Link)`
+export const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
+`;
+
+export const DrawerContainer = styled.div`
+  width: 250px;
 `;

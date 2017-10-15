@@ -9,10 +9,6 @@ const {
 } = require('fuse-box');
 const { spawn } = require('child_process');
 
-// Setup environmental variables
-const dotenv = require('dotenv');
-const env = dotenv.config().parsed;
-
 const DEV_PORT = 4444;
 const ASSETS = ['*.jpg', '*.png', '*.jpeg', '*.gif', '*.svg'];
 
@@ -38,12 +34,10 @@ function initFuse() {
     tsConfig: 'tsconfig.json',
   };
 
-  const NODE_ENV = process.env.NODE_ENV;
-
   fuse = FuseBox.init({
     ...config,
     plugins: [
-      EnvPlugin({ NODE_ENV, ...env }),
+      EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
       [CSSResourcePlugin(), CSSPlugin()],
       isProduction && QuantumPlugin({
         target: 'electron',
@@ -56,7 +50,7 @@ function initFuse() {
   fuseRenderer = FuseBox.init({
     ...config,
     plugins: [
-      EnvPlugin({ NODE_ENV, ...env }),
+      EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
       [CSSResourcePlugin(), CSSPlugin()],
       isProduction && QuantumPlugin({
         target: 'electron',
