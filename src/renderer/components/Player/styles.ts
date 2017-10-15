@@ -31,13 +31,11 @@ export const PlayButton = styled(IconButton)`
 `;
 
 export const PlayIcon = styled(PlayCircleFilled)`
-  color: ${primary};
   width: ${buttonSize}px !important;
   height: ${buttonSize}px !important;
 `;
 
 export const PauseIcon = styled(PauseCircleFilled)`
-  color: ${primary};
   width: ${buttonSize}px !important;
   height: ${buttonSize}px !important;
 `;

@@ -27,13 +27,13 @@ interface SearchParams {
 }
 
 // Search YouTube with given search terms
-async function search(searchTerm: string, part = 'snippet'): Promise<any[]> {
+async function search(searchTerm: string, api_key: string, part = 'snippet'): Promise<any[]> {
   if (isYoutubeLink(searchTerm)) {
     const qs = searchTerm.split('?')[1];
 
     const params: SearchParams = {
       part,
-      key: process.env.YOUTUBE_API_KEY,
+      key: api_key,
       id: querystring.parse(qs).v,
     };
 
@@ -49,7 +49,7 @@ async function search(searchTerm: string, part = 'snippet'): Promise<any[]> {
 
     const params: SearchParams = {
       part,
-      key: process.env.YOUTUBE_API_KEY,
+      key: api_key,
       maxResults: 50,
       playlistId: querystring.parse(qs).list,
     };
@@ -64,7 +64,7 @@ async function search(searchTerm: string, part = 'snippet'): Promise<any[]> {
   } else {
     const params: SearchParams = {
       part,
-      key: process.env.YOUTUBE_API_KEY,
+      key: api_key,
       q: searchTerm,
       maxResults: 10,
     };
@@ -80,8 +80,8 @@ async function search(searchTerm: string, part = 'snippet'): Promise<any[]> {
 }
 
 // Search YouTube but also get extra info (video length, etc.)
-async function searchExtra(searchTerm: string): Promise<any[]> {
-  let items = await search(searchTerm);
+async function searchExtra(searchTerm: string, api_key: string): Promise<any[]> {
+  let items = await search(searchTerm, api_key);
   let videoIDs: string[] = [];
   let nonVideoIndices: number[] = [];
 
@@ -105,7 +105,7 @@ async function searchExtra(searchTerm: string): Promise<any[]> {
 
   const params: SearchParams = {
     part: 'contentDetails',
-    key: process.env.YOUTUBE_API_KEY,
+    key: api_key,
     id: videoIDs.join(','),
   };
 
@@ -165,17 +165,18 @@ function getSuggestionValue(suggestion: any): string {
   return suggestion.snippet.title;
 }
 
-async function getSuggestions(value: string): Promise<any[]> {
+async function getSuggestions(value: string, api_key: string): Promise<any[]> {
   const inputValue = value.trim();
 
   if (inputValue.length === 0) return [];
-  return await searchExtra(inputValue);
+  return await searchExtra(inputValue, api_key);
 }
 
 // Component Class
 
 interface IProps extends React.Props<Search> {
   dispatch: (action: AppAction) => void;
+  youtubeAPIKey: string;
 }
 
 interface IState {
@@ -183,7 +184,7 @@ interface IState {
   suggestions: any[];
 }
 
-export class Search extends React.PureComponent<IProps, IState> {
+class Search extends React.PureComponent<IProps, IState> {
   private debouncedHSFR: (value: string) => void;
 
   constructor() {
@@ -197,7 +198,7 @@ export class Search extends React.PureComponent<IProps, IState> {
     this.debouncedHSFR = debounce(async (value: string) => {
       // Perform search and save results to state
       this.setState({
-        suggestions: await getSuggestions(value),
+        suggestions: await getSuggestions(value, this.props.youtubeAPIKey),
       });
     }, 300);
   }
@@ -321,4 +322,10 @@ export class Search extends React.PureComponent<IProps, IState> {
   }
 }
 
-export default connect()(Search as any);
+function mapStateToProps(state: any) {
+  return {
+    youtubeAPIKey: state.get('settings').get('settings').youtubeAPIKey,
+  };
+}
+
+export default connect(mapStateToProps)(Search as any);
