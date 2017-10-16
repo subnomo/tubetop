@@ -3,7 +3,7 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
 export const SettingsContainer = styled.div`
-  width: 720px;
+  width: 500px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 72px;

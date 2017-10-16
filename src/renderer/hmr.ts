@@ -38,7 +38,7 @@ const customizedHMRPlugin = {
   }
 };
 
-if (process.env.NODE_ENV === 'development' && !process.env.hmrRegistered) {
-  (process.env.hmrRegistered as any) = false;
+if (process.env.NODE_ENV !== 'production' && !process.env.hmrRegistered) {
+  (process.env as any).hmrRegistered = false;
   FuseBox.addPlugin(customizedHMRPlugin);
 }

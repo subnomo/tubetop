@@ -1,6 +1,6 @@
 import { app, BrowserWindow, globalShortcut } from 'electron';
 
-const debug = process.env.NODE_ENV === 'development';
+const debug = process.env.NODE_ENV !== 'production';
 let installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS;
 
 if (debug) {
