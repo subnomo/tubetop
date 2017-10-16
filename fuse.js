@@ -12,7 +12,7 @@ const { spawn } = require('child_process');
 const DEV_PORT = 4444;
 const ASSETS = ['*.jpg', '*.png', '*.jpeg', '*.gif', '*.svg'];
 
-let isProduction = process.env.NODE_ENV === 'production';
+let ip = process.env.NODE_ENV === 'production';
 
 // Copy the renderer html file to dist
 Sparky.task('copy-html', () => {
@@ -26,36 +26,38 @@ function initFuse() {
   const config = {
     homeDir: 'src/',
     output: 'dist/$name.js',
-    target: 'electron',
-    log: !isProduction,
-    hash: false,
-    cache: !isProduction,
-    sourceMaps: !isProduction,
+    log: true,
+    cache: !ip,
+    sourceMaps: !ip,
     tsConfig: 'tsconfig.json',
   };
 
   fuse = FuseBox.init({
     ...config,
+    target: 'electron',
     plugins: [
-      EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
+      EnvPlugin({ NODE_ENV: ip ? 'production' : 'development' }),
       [CSSResourcePlugin(), CSSPlugin()],
-      isProduction && QuantumPlugin({
+      ip && QuantumPlugin({
         target: 'electron',
         bakeApiIntoBundle : 'app',
         uglify: true,
+        treeshake: true,
       }),
     ]
   });
 
   fuseRenderer = FuseBox.init({
     ...config,
+    target: 'electron',
     plugins: [
-      EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
+      EnvPlugin({ NODE_ENV: ip ? 'production' : 'development' }),
       [CSSResourcePlugin(), CSSPlugin()],
-      isProduction && QuantumPlugin({
+      ip && QuantumPlugin({
         target: 'electron',
         bakeApiIntoBundle : 'renderer',
         uglify: true,
+        treeshake: true,
       }),
     ]
   });
@@ -90,7 +92,7 @@ Sparky.task('bundle', ['copy-html'], () => {
 });
 
 Sparky.task('dist', ['copy-html'], () => {
-  isProduction = true;
+  ip = true;
   initFuse();
   bundle();
   fuse.run();
@@ -99,14 +101,14 @@ Sparky.task('dist', ['copy-html'], () => {
 
 Sparky.task('default', ['copy-html'], () => {
   // Start the hot-reload server
-  if (!isProduction) {
+  if (!ip) {
     fuseRenderer.dev({ port: DEV_PORT, httpServer: false });
   }
 
   const { appBundle, rendererBundle } = bundle();
 
   // Watch and hot-reload
-  if (!isProduction) {
+  if (!ip) {
     appBundle.watch();
 
     rendererBundle.watch();
@@ -115,7 +117,7 @@ Sparky.task('default', ['copy-html'], () => {
 
   return fuse.run().then(() => {
     fuseRenderer.run().then(() => {
-      if (!isProduction) {
+      if (!ip) {
         spawn('node', [`${__dirname}/node_modules/electron/cli.js`, __dirname], {
           stdio: 'inherit',
         });
