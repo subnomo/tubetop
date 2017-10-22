@@ -212,7 +212,7 @@ class Search extends React.PureComponent<IProps, IState> {
   handleKeyPress = (e: any) => {
     // On 'Enter', add all suggestions to queue
     if (e.key === 'Enter') {
-      this.state.suggestions.forEach((suggestion, i) => {
+      this.state.suggestions.forEach((suggestion) => {
         this.handleSuggestionSelected(null, { suggestion });
       });
     }

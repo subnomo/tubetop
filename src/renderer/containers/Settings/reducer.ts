@@ -9,8 +9,7 @@ const initialState = fromJS({
 export default function settingsReducer(state = initialState, action: any) {
   switch (action.type) {
     case SAVE_SETTINGS:
-      return state
-        .set('settings', action.settings);
+      return state.set('settings', action.settings);
     default:
       return state;
   }
