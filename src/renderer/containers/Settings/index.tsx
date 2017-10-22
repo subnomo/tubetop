@@ -14,7 +14,7 @@ interface IState {
 }
 
 class Settings extends React.PureComponent<IProps, IState> {
-  constructor(props) {
+  constructor(props: IProps) {
     super(props);
 
     this.state = {
@@ -26,21 +26,15 @@ class Settings extends React.PureComponent<IProps, IState> {
     this.props.dispatch(saveSettings(this.state));
   }
 
-  handleChange = (event) => {
-    switch (event.target.id) {
-      case 'ytAPI':
-        this.setState({ youtubeAPIKey: event.target.value });
-        break;
-      default:
-        break;
-    }
+  handleChange = (event: any) => {
+    this.setState({ [event.target.id]: event.target.value });
   }
 
   render() {
     return (
       <SettingsContainer>
         <SettingsTextField
-          id="ytAPI"
+          id="youtubeAPIKey"
           label="YouTube API Key"
           defaultValue={this.props.settings.youtubeAPIKey}
           onChange={this.handleChange}
