@@ -18,7 +18,12 @@ if (debug) {
 let win: Electron.BrowserWindow = null;
 
 function createWindow() {
-  win = new BrowserWindow({ width: 800, height: 600 });
+  win = new BrowserWindow({
+  	width: 800,
+  	minWidth: 775,
+  	height: 600,
+  	minHeight: 400,
+  });
 
   // Install dev extensions
   if (debug) {
