@@ -3,6 +3,8 @@ import { grey } from 'material-ui/colors';
 import IconButton from 'material-ui/IconButton';
 import PlayCircleFilled from 'material-ui-icons/PlayCircleFilled';
 import PauseCircleFilled from 'material-ui-icons/PauseCircleFilled';
+import Repeat from 'material-ui-icons/Repeat';
+import RepeatOne from 'material-ui-icons/RepeatOne';
 
 import { primary } from '../../colors';
 
@@ -21,6 +23,10 @@ export const Controls = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+`;
+
+export const ExtraControls = styled.div`
+
 `;
 
 const buttonSize = 60;
@@ -74,3 +80,11 @@ export const sliderStyle = {
   backgroundColor: primary,
   borderColor: primary,
 };
+
+export const ActiveIcon = styled.div`
+  display: flex;
+
+  * {
+    fill: ${primary};
+  }
+`;
