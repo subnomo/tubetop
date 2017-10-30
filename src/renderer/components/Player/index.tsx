@@ -4,6 +4,7 @@ import { List } from 'immutable';
 import { ipcRenderer } from 'electron';
 import * as Slider from 'rc-slider/lib/Slider';
 import * as ytdl from 'ytdl-core';
+import { isEqual } from 'lodash';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import SkipPrevious from 'material-ui-icons/SkipPrevious';
@@ -11,25 +12,38 @@ import SkipNext from 'material-ui-icons/SkipNext';
 import VolumeMute from 'material-ui-icons/VolumeMute';
 import VolumeDown from 'material-ui-icons/VolumeDown';
 import VolumeUp from 'material-ui-icons/VolumeUp';
+import RepeatIcon from 'material-ui-icons/Repeat';
+import RepeatOne from 'material-ui-icons/RepeatOne';
+import Shuffle from 'material-ui-icons/Shuffle';
+import DeleteSweep from 'material-ui-icons/DeleteSweep';
 
 import { SongData } from '../Song';
 import { parseTime } from '../Song/util';
-import { AppAction, playSong } from '../../containers/App/actions';
+import { AppAction, playSong, clearSongs, editSongs } from '../../containers/App/actions';
+import { Order } from './util';
 import {
   PlayerContainer,
   VolumeContainer,
   TimerContainer,
   Controls,
+  ExtraControls,
   PlayButton,
   PlayIcon,
   PauseIcon,
   sliderStyle,
+  ActiveIcon,
 } from './styles';
 
 interface IProps extends React.Props<Player> {
   dispatch: (action: AppAction) => void;
   songs: SongData[];
 }
+
+const enum Repeat {
+  None,
+  All,
+  One,
+};
 
 interface IState {
   current: number;
@@ -40,6 +54,9 @@ interface IState {
   savedVolume: number;
   playing: boolean;
   paused: boolean;
+  repeat: Repeat;
+  shuffle: boolean;
+  order: Order;
 }
 
 class Player extends React.PureComponent<IProps, IState> {
@@ -57,8 +74,12 @@ class Player extends React.PureComponent<IProps, IState> {
       savedVolume: 50,
       playing: false,
       paused: false,
+      repeat: Repeat.None,
+      shuffle: false,
+      order: new Order(),
     };
 
+    // Media keys
     ipcRenderer.on('play-pause', () => {
       if (this.state.playing && !this.state.paused) {
         this.pause();
@@ -74,7 +95,7 @@ class Player extends React.PureComponent<IProps, IState> {
 
   componentWillReceiveProps(nextProps: IProps) {
     const { songs } = this.props;
-    const { currentKey } = this.state;
+    const { currentKey, order } = this.state;
 
     // Check if the current song is playing
     let currentPlaying = false;
@@ -98,29 +119,11 @@ class Player extends React.PureComponent<IProps, IState> {
       }
     }
 
-    // If a new song is playing, find and play it
-    if (!currentPlaying) {
-      for (let i = 0; i < nextProps.songs.length; i++) {
-        if (nextProps.songs[i].playing) {
-          this.audio.pause();
-
-          this.setState({
-            current: i,
-            currentKey: nextProps.songs[i].key,
-          }, () => { this.play(nextProps); });
-
-          break;
-        }
-      }
-    }
-
-    // Else if the song has changed, reset state and play the new song
-    else if (!nextPlaying) {
+    // If the song has changed, reset state and play the new song
+    if (!currentPlaying || !nextPlaying) {
       let newSong = false;
 
       for (let i = 0; i < nextProps.songs.length; i++) {
-        if (i === current) continue;
-
         if (nextProps.songs[i].playing) {
           this.audio.pause();
 
@@ -144,10 +147,54 @@ class Player extends React.PureComponent<IProps, IState> {
       }
     }
 
-    // Else, make sure index is up to date
+    // Make sure index is up to date
     else {
       this.setState({
         current,
+      });
+    }
+
+    let newOrder = new Order(order);
+
+    // Remove deleted songs from order
+    let deletedSongs: number[] = [];
+
+    for (let i = 0; i < songs.length; i++) {
+      let songExists = false;
+
+      for (let j = 0; j < nextProps.songs.length; j++) {
+        if (songs[i].key === nextProps.songs[j].key) {
+          songExists = true;
+          break;
+        }
+      }
+
+      if (!songExists) deletedSongs.push(i);
+    }
+
+    newOrder.remove(deletedSongs);
+
+    // Add new songs to order
+    let newSongs: number[] = [];
+
+    for (let i = 0; i < nextProps.songs.length; i++) {
+      let newSong = true;
+
+      for (let j = 0; j < songs.length; j++) {
+        if (nextProps.songs[i].key === songs[j].key) {
+          newSong = false;
+          break;
+        }
+      }
+
+      if (newSong) newSongs.push(i);
+    }
+
+    newOrder.add(newSongs);
+
+    if (!isEqual(order, newOrder)) {
+      this.setState({
+        order: newOrder,
       });
     }
   }
@@ -242,6 +289,7 @@ class Player extends React.PureComponent<IProps, IState> {
   stop = () => {
     this.audio.pause();
     this.audio.currentTime = 0;
+    document.title = 'tubetop';
 
     this.setState({
       progress: 0,
@@ -249,16 +297,24 @@ class Player extends React.PureComponent<IProps, IState> {
       playing: false,
       paused: false,
     });
-
-    document.title = 'tubetop';
   }
 
   skipPrevious = () => {
-    const { current } = this.state;
+    const { current, order } = this.state;
 
-    if (current > 0) {
+    // Find previous item in order
+    let newIndex = 0;
+
+    for (let i = 0; i < order.length; i++) {
+      if (order.get(i) === current) {
+        newIndex = i - 1;
+        break;
+      }
+    }
+
+    if (newIndex >= 0) {
       this.audio.pause();
-      this.props.dispatch(playSong(current - 1));
+      this.props.dispatch(playSong(order.get(newIndex)));
 
       return true;
     }
@@ -267,16 +323,61 @@ class Player extends React.PureComponent<IProps, IState> {
   }
 
   skipNext = () => {
-    const { current } = this.state;
+    const { current, order } = this.state;
 
-    if (current < this.props.songs.length - 1) {
+    // Find next item in order
+    let newIndex = 0;
+
+    for (let i = 0; i < order.length; i++) {
+      if (order.get(i) === current) {
+        newIndex = i + 1;
+        break;
+      }
+    }
+
+    if (newIndex < this.props.songs.length) {
       this.audio.pause();
-      this.props.dispatch(playSong(current + 1));
+      this.props.dispatch(playSong(order.get(newIndex)));
 
       return true;
     }
 
     return false;
+  }
+
+  toggleRepeat = () => {
+    const { repeat } = this.state;
+
+    if (repeat === Repeat.One) {
+      this.setState({
+        repeat: Repeat.None,
+      });
+    } else {
+      this.setState({
+        repeat: repeat + 1,
+      });
+    }
+  }
+
+  toggleShuffle = () => {
+    const { current, order, shuffle } = this.state;
+
+    let newOrder = new Order(order);
+
+    if (shuffle) {
+      newOrder.sort();
+    } else {
+      newOrder.shuffle(current);
+    }
+
+    this.setState({
+      shuffle: !shuffle,
+      order: newOrder,
+    });
+  }
+
+  clearQueue = () => {
+    this.props.dispatch(clearSongs());
   }
 
   seek = (pos: number) => {
@@ -311,10 +412,23 @@ class Player extends React.PureComponent<IProps, IState> {
   }
 
   handleSongEnded = () => {
+    const { repeat, order } = this.state;
+
+    if (repeat === Repeat.One) {
+      this.seek(0);
+      this.audio.play();
+      return;
+    }
+
     const skipped = this.skipNext();
 
-    if (!skipped) {
+    if (!skipped && repeat === Repeat.All) {
+      this.props.dispatch(playSong(order[0]));
+    } else if (!skipped) {
       this.stop();
+      this.setState({
+        current: 0,
+      });
     }
   }
 
@@ -347,7 +461,15 @@ class Player extends React.PureComponent<IProps, IState> {
 
   render() {
     const { songs } = this.props;
-    const { playing, paused, progress, current, volume } = this.state;
+    const {
+      playing,
+      paused,
+      progress,
+      current,
+      volume,
+      repeat,
+      shuffle,
+    } = this.state;
 
     let duration = 0;
 
@@ -355,7 +477,7 @@ class Player extends React.PureComponent<IProps, IState> {
       duration = songs[current].duration;
     }
 
-    let volumeIcon;
+    let volumeIcon: JSX.Element;
 
     if (volume === 0) {
       volumeIcon = <VolumeMute />;
@@ -363,6 +485,24 @@ class Player extends React.PureComponent<IProps, IState> {
       volumeIcon = <VolumeDown />;
     } else {
       volumeIcon = <VolumeUp />;
+    }
+
+    let repeatIcon: JSX.Element;
+
+    if (repeat === Repeat.None) {
+      repeatIcon = <RepeatIcon />;
+    } else if (repeat === Repeat.All) {
+      repeatIcon = (
+        <ActiveIcon>
+          <RepeatIcon />
+        </ActiveIcon>
+      );
+    } else {
+      repeatIcon = (
+        <ActiveIcon>
+          <RepeatOne />
+        </ActiveIcon>
+      );
     }
 
     return (
@@ -391,6 +531,10 @@ class Player extends React.PureComponent<IProps, IState> {
 
         {/* Player controls */}
         <Controls>
+          <IconButton aria-label="Repeat" onClick={this.toggleRepeat}>
+            {repeatIcon}
+          </IconButton>
+
           <IconButton aria-label="Previous" onClick={this.skipPrevious}>
             <SkipPrevious />
           </IconButton>
@@ -406,6 +550,22 @@ class Player extends React.PureComponent<IProps, IState> {
           <IconButton aria-label="Next" onClick={this.skipNext}>
             <SkipNext />
           </IconButton>
+
+          <IconButton aria-label="Shuffle" onClick={this.toggleShuffle}>
+            {shuffle ? (
+              <ActiveIcon>
+                <Shuffle />
+              </ActiveIcon>
+            ) : <Shuffle />}
+          </IconButton>
+
+          {/* TODO: make this a dropdown with a "more vert" icon */}
+          {/* and don't offset middle controls */}
+          <ExtraControls>
+            <IconButton aria-label="Clear Queue" onClick={this.clearQueue}>
+              <DeleteSweep />
+            </IconButton>
+          </ExtraControls>
         </Controls>
 
         {/* Volume control */}

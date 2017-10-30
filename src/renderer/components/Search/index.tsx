@@ -12,7 +12,7 @@ import SearchIcon from 'material-ui-icons/Search';
 
 import { SearchBox, SearchInput, AutosuggestWrapper } from './styles';
 import { isYoutubeLink, isYoutubePlayList } from './util';
-import { AppAction, addSong } from '../../containers/App/actions';
+import { AppAction, addSong, addSongs } from '../../containers/App/actions';
 import { SongData } from '../Song';
 
 interface SearchParams {
@@ -212,9 +212,11 @@ class Search extends React.PureComponent<IProps, IState> {
   handleKeyPress = (e: any) => {
     // On 'Enter', add all suggestions to queue
     if (e.key === 'Enter') {
-      this.state.suggestions.forEach((suggestion) => {
-        this.handleSuggestionSelected(null, { suggestion });
+      const songs = this.state.suggestions.map((suggestion) => {
+        return this.handleSuggestionSelected(null, { suggestion }, false);
       });
+
+      this.props.dispatch(addSongs(songs));
     }
   }
 
@@ -229,7 +231,7 @@ class Search extends React.PureComponent<IProps, IState> {
     });
   }
 
-  handleSuggestionSelected = (e: any, opts: any) => {
+  handleSuggestionSelected = (e: any, opts: any, dispatch = true) => {
     const { suggestion } = opts;
 
     const song: SongData = {
@@ -241,7 +243,9 @@ class Search extends React.PureComponent<IProps, IState> {
       playing: false,
     };
 
-    this.props.dispatch(addSong(song));
+    if (dispatch) this.props.dispatch(addSong(song));
+
+    return song;
   }
 
   renderInput = (inputProps: any) => {

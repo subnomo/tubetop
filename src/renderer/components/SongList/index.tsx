@@ -13,7 +13,7 @@ export default class SongList extends React.PureComponent<IProps, {}> {
       <List>
         {this.props.songs.map((song, i) => (
           <Song
-            key={song.key}
+            key={i}
             song={song}
             index={i}
           />
