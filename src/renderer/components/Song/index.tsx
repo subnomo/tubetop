@@ -2,10 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction } from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
-import Avatar from 'material-ui/Avatar';
 import Delete from 'material-ui-icons/Delete';
 
 import { parseTime } from './util';
+import { Thumb } from './styles';
 import { AppAction, playSong, removeSong } from '../../containers/App/actions';
 
 export interface SongData {
@@ -42,7 +42,7 @@ class Song extends React.PureComponent<IProps, {}> {
     return (
       <ListItem button onClick={this.playItem}>
         <ListItemAvatar>
-          <Avatar src={song.thumb} />
+          <Thumb width="72" src={song.thumb} />
         </ListItemAvatar>
 
         <ListItemText

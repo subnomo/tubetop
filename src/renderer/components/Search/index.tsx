@@ -238,7 +238,7 @@ class Search extends React.PureComponent<IProps, IState> {
       key: ulid(),
       id: suggestion.id.videoId || suggestion.id,
       title: suggestion.snippet.title,
-      thumb: suggestion.snippet.thumbnails.default.url,
+      thumb: suggestion.snippet.thumbnails.medium.url,
       duration: parseDuration(suggestion.contentDetails.duration),
       playing: false,
     };
