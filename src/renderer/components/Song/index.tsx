@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui-icons/Delete';
 
 import { parseTime } from './util';
-import { Thumb } from './styles';
+import { Thumb, ActiveListItemText } from './styles';
 import { AppAction, playSong, removeSong } from '../../containers/App/actions';
 
 export interface SongData {
@@ -39,16 +39,31 @@ class Song extends React.PureComponent<IProps, {}> {
   render() {
     const { song, index } = this.props;
 
+    let textElement: JSX.Element;
+
+    if (song.playing) {
+      textElement = (
+        <ActiveListItemText
+          primary={song.title}
+          secondary={parseTime(song.duration)}
+        />
+      );
+    } else {
+      textElement = (
+        <ListItemText
+          primary={song.title}
+          secondary={parseTime(song.duration)}
+        />
+      );
+    }
+
     return (
       <ListItem button onClick={this.playItem}>
         <ListItemAvatar>
           <Thumb width="72" src={song.thumb} />
         </ListItemAvatar>
 
-        <ListItemText
-          primary={song.title}
-          secondary={parseTime(song.duration)}
-        />
+        {textElement}
 
         <ListItemSecondaryAction>
           <IconButton onClick={this.removeItem}>
