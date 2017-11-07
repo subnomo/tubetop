@@ -1,6 +1,6 @@
 {
   "name": "tubetop",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A YouTube music player, for your desktop.",
   "main": "dist/app.js",
   "repository": "https://github.com/subnomo/tubetop",
