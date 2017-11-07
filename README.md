@@ -9,4 +9,4 @@ $ yarn install
 $ node fuse
 ```
 
-![screen](https://i.imgur.com/KwjuCSS.png)
+![screen](https://i.imgur.com/9E7LFVA.png)
