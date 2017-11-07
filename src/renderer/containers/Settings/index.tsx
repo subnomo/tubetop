@@ -49,8 +49,10 @@ class Settings extends React.PureComponent<IProps, IState> {
 }
 
 function mapStateToProps(state: any) {
+  const settings = state.get('settings').get('settings');
+
   return {
-    settings: state.get('settings').get('settings'),
+    settings: settings.youtubeAPIKey ? settings : settings.toObject(),
   };
 }
 

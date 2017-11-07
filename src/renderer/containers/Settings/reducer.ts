@@ -3,7 +3,9 @@ import { fromJS } from 'immutable';
 import { SAVE_SETTINGS } from './constants';
 
 const initialState = fromJS({
-  settings: {},
+  settings: {
+    youtubeAPIKey: 'AIzaSyDwXKHjw1IoqsLQNf4yykNj6YEn-VlsOa8',
+  },
 });
 
 export default function settingsReducer(state = initialState, action: any) {
