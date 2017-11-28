@@ -1,4 +1,4 @@
-import { shuffle } from 'lodash';
+import { shuffle, isEqual } from 'lodash';
 
 export class Order {
   private array: number[];
@@ -64,5 +64,9 @@ export class Order {
     for (let i = 0; i < this.array.length; i++) {
       this.array[i] = i;
     }
+  }
+
+  public equals(order: Order): boolean {
+    return isEqual(this.array, order.array);
   }
 }
