@@ -4,7 +4,6 @@ import { List } from 'immutable';
 import { ipcRenderer } from 'electron';
 import * as Slider from 'rc-slider/lib/Slider';
 import * as ytdl from 'ytdl-core';
-import { isEqual } from 'lodash';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import SkipPrevious from 'material-ui-icons/SkipPrevious';
@@ -192,7 +191,7 @@ class Player extends React.PureComponent<IProps, IState> {
 
     newOrder.add(newSongs);
 
-    if (!isEqual(order, newOrder)) {
+    if (!order.equals(newOrder)) {
       this.setState({
         order: newOrder,
       });
