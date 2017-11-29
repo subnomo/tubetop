@@ -6,8 +6,40 @@
   "repository": "https://github.com/subnomo/tubetop",
   "author": "Alex Taylor <alex@subnomo.me>",
   "license": "MIT",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:nocov": "jest"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/renderer/**/*.{ts,tsx}",
+      "!src/renderer/**/*.test.{ts,tsx}",
+      "!src/renderer/*/RbGenerated*/*.{ts,tsx}",
+      "!src/renderer/index.tsx",
+      "!src/renderer/*.ts",
+      "!src/renderer/*/*/Loadable.{ts,tsx}"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 98,
+        "branches": 91,
+        "functions": 98,
+        "lines": 98
+      }
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "src/renderer"
+    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "testMatch": ["**/tests/*.(ts|tsx|js)"],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    }
+  },
   "devDependencies": {
     "@types/history": "^4.6.2",
+    "@types/jest": "^21.1.8",
     "@types/lodash": "^4.14.86",
     "@types/node": "^8.0.53",
     "@types/rc-slider": "^8.2.0",
@@ -20,6 +52,8 @@
     "@types/redux-immutable": "^3.0.38",
     "electron-devtools-installer": "^2.2.1",
     "fuse-box": "^2.5.0-beta.1",
+    "jest": "^21.2.1",
+    "ts-jest": "^21.2.3",
     "typescript": "^2.6.2",
     "uglify-js": "^3.2.0"
   },

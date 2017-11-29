@@ -7,9 +7,18 @@ export class Order {
   // but that breaks React DevTools
   public length: number;
 
-  constructor(order?: Order) {
-    this.array = order ? order.array : [];
-    this.length = order ? order.length : 0;
+  constructor(order?: Order | number[]) {
+    if (!order) {
+      this.array = [];
+      this.length = 0;
+    } else if (Array.isArray(order)) {
+      this.array = order;
+      this.length = order.length;
+      this.sort();
+    } else {
+      this.array = order.array;
+      this.length = order.length;
+    }
   }
 
   public get(index: number): number {
@@ -31,12 +40,14 @@ export class Order {
 
     let removed: number[] = [];
 
+    // Remove items from array
     for (let i = indices.length - 1; i >= 0; i--) {
       const remove = this.array.splice(indices[i], 1)[0];
       removed.push(remove);
     }
 
-    for (let i = 0; i < indices.length; i++) {
+    // Decrement all items greater than removed numbers
+    for (let i = 0; i < removed.length; i++) {
       for (let j = 0; j < this.array.length; j++) {
         if (this.array[j] > removed[i]) {
           this.array[j]--;
@@ -48,7 +59,12 @@ export class Order {
   }
 
   public shuffle(first?: number): void {
+    if (this.length <= 1) return;
+
+    // Backup array
+    const backup = [...this.array];
     this.array = shuffle(this.array);
+    let reshuffle = true;
 
     if (first != null) {
       const firstIndex = this.array.indexOf(first);
@@ -56,7 +72,17 @@ export class Order {
       if (firstIndex !== -1) {
         this.array.splice(firstIndex, 1);
         this.array.unshift(first);
+
+        // If there are only two items, don't reshuffle
+        if (this.length === 2) {
+          reshuffle = false;
+        }
       }
+    }
+
+    // If somehow the order hasn't changed, recurse
+    if (reshuffle && isEqual(this.array, backup)) {
+      this.shuffle(first);
     }
   }
 
