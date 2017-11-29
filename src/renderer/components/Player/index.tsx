@@ -61,8 +61,8 @@ interface IState {
 class Player extends React.PureComponent<IProps, IState> {
   private audio: HTMLAudioElement;
 
-  constructor() {
-    super();
+  constructor(props: IProps) {
+    super(props);
 
     this.state = {
       current: 0,

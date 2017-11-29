@@ -20,8 +20,8 @@ interface IState {
 }
 
 export default class NavBar extends React.PureComponent<IProps, IState> {
-  constructor() {
-    super();
+  constructor(props: IProps) {
+    super(props);
 
     this.state = {
       drawerOpen: false,

@@ -187,8 +187,8 @@ interface IState {
 class Search extends React.PureComponent<IProps, IState> {
   private debouncedHSFR: (value: string) => void;
 
-  constructor() {
-    super();
+  constructor(props: IProps) {
+    super(props);
 
     this.state = {
       value: '',
