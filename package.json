@@ -13,6 +13,7 @@
   "jest": {
     "collectCoverageFrom": [
       "src/renderer/**/*.{ts,tsx}",
+      "!src/renderer/**/styles.{ts,tsx}",
       "!src/renderer/**/*.test.{ts,tsx}",
       "!src/renderer/*/RbGenerated*/*.{ts,tsx}",
       "!src/renderer/index.tsx",
@@ -31,13 +32,25 @@
       "node_modules",
       "src/renderer"
     ],
-    "moduleFileExtensions": ["ts", "tsx", "js"],
-    "testMatch": ["**/tests/*.(ts|tsx|js)"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "setupFiles": [
+      "<rootDir>/src/renderer/shim.ts",
+      "<rootDir>/src/renderer/setupTests.ts"
+    ],
+    "testMatch": [
+      "**/tests/*.(ts|tsx|js)"
+    ],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     }
   },
   "devDependencies": {
+    "@types/enzyme": "^3.1.5",
+    "@types/enzyme-adapter-react-16": "^1.0.1",
     "@types/history": "^4.6.2",
     "@types/jest": "^21.1.8",
     "@types/lodash": "^4.14.86",
@@ -51,6 +64,8 @@
     "@types/react-router-redux": "^5.0.10",
     "@types/redux-immutable": "^3.0.38",
     "electron-devtools-installer": "^2.2.1",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
     "fuse-box": "^2.5.0-beta.1",
     "jest": "^21.2.1",
     "ts-jest": "^21.2.3",
