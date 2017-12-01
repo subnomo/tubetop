@@ -58,7 +58,7 @@ interface IState {
   order: Order;
 }
 
-class Player extends React.PureComponent<IProps, IState> {
+export class Player extends React.PureComponent<IProps, IState> {
   private audio: HTMLAudioElement;
 
   constructor(props: IProps) {

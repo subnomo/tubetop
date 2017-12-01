@@ -13,7 +13,7 @@ interface IState {
   youtubeAPIKey: string;
 }
 
-class Settings extends React.PureComponent<IProps, IState> {
+export class Settings extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 

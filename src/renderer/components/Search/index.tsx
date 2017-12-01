@@ -184,7 +184,7 @@ interface IState {
   suggestions: any[];
 }
 
-class Search extends React.PureComponent<IProps, IState> {
+export class Search extends React.PureComponent<IProps, IState> {
   private debouncedHSFR: (value: string) => void;
 
   constructor(props: IProps) {

@@ -23,7 +23,7 @@ interface IProps extends React.Props<Song> {
   index: number;
 }
 
-class Song extends React.PureComponent<IProps, {}> {
+export class Song extends React.PureComponent<IProps, {}> {
   playItem = () => {
     const { dispatch, index } = this.props;
 
