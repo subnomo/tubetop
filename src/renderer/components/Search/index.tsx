@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as querystring from 'querystring';
 import { debounce } from 'lodash';
-import * as ulid from 'ulid';
+import { ulid } from 'ulid';
 import * as Autosuggest from 'react-autosuggest';
 import * as match from 'autosuggest-highlight/match';
 import * as parse from 'autosuggest-highlight/parse';
