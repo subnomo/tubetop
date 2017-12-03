@@ -28,13 +28,11 @@ describe('Order', () => {
   it('should add an array of numbers to end', () => {
     order.add([3, 4, 5]);
     expect((order as any).array).toEqual([0, 1, 2, 3, 4, 5]);
-    expect(order.length).toBe(6);
   });
 
   it('should remove a number at index, and decrement right elements', () => {
     order.remove(1);
     expect((order as any).array).toEqual([0, 1]);
-    expect(order.length).toBe(2);
   });
 
   it('should shuffle order', () => {
