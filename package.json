@@ -28,6 +28,7 @@
         "lines": 98
       }
     },
+    "mapCoverage": true,
     "moduleDirectories": [
       "node_modules",
       "src/renderer"
