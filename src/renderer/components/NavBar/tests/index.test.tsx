@@ -10,7 +10,7 @@ describe('<NavBar />', () => {
   });
 
   it('should toggle drawer', () => {
-    const renderedComponent = shallow(<NavBar title="title" />).instance();
+    const renderedComponent = shallow(<NavBar title="title" />).instance() as NavBar;
     expect(renderedComponent.state.drawerOpen).toBe(false);
     renderedComponent.toggleDrawer();
     expect(renderedComponent.state.drawerOpen).toBe(true);
