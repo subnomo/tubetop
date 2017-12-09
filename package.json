@@ -13,6 +13,7 @@
   "jest": {
     "collectCoverageFrom": [
       "src/renderer/**/*.{ts,tsx}",
+      "!src/renderer/**/constants.{ts,tsx}",
       "!src/renderer/**/styles.{ts,tsx}",
       "!src/renderer/**/*.test.{ts,tsx}",
       "!src/renderer/*/RbGenerated*/*.{ts,tsx}",
