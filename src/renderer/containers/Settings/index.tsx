@@ -9,7 +9,7 @@ interface IProps extends React.Props<Settings> {
   settings: Partial<IState>;
 }
 
-interface IState {
+export interface IState {
   youtubeAPIKey: string;
 }
 
@@ -48,7 +48,7 @@ export class Settings extends React.PureComponent<IProps, IState> {
   }
 }
 
-function mapStateToProps(state: any) {
+export function mapStateToProps(state: any) {
   const settings = state.get('settings').get('settings');
 
   return {
