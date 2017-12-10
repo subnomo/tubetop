@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 
-import { IState } from '../index';
+import { IState } from '..';
 import settingsReducer from '../reducer';
 import { saveSettings } from '../actions';
 

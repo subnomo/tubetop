@@ -3,7 +3,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import { ListItem, ListItemText } from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 
-import { Song, SongData } from '../index';
+import { Song, SongData } from '..';
 import { parseTime } from '../util';
 import { ActiveListItemText, Thumb } from '../styles';
 import { playSong, removeSong } from '../../../containers/App/actions';
