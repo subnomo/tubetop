@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { mount, ReactWrapper } from 'enzyme';
-import { ListItemText } from 'material-ui/List';
+import { shallow, ShallowWrapper } from 'enzyme';
+import { ListItem, ListItemText } from 'material-ui/List';
+import IconButton from 'material-ui/IconButton';
 
 import { Song, SongData } from '../index';
 import { parseTime } from '../util';
-import { ActiveListItemText } from '../styles';
+import { ActiveListItemText, Thumb } from '../styles';
 import { playSong, removeSong } from '../../../containers/App/actions';
 
 describe('<Song />', () => {
   let dispatch: jest.Mock<{}>;
   let testSong: SongData;
-  let songComponent: ReactWrapper<any, any>;
+  let songComponent: ShallowWrapper<any, any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
@@ -23,25 +24,13 @@ describe('<Song />', () => {
       playing: false,
     };
 
-    songComponent = mount(
+    songComponent = shallow(
       <Song dispatch={dispatch} song={testSong} index={0} />
     );
   });
 
-  it('should dispatch playSong when song is clicked', () => {
-    (songComponent.instance() as Song).playItem();
-    expect(dispatch).toHaveBeenCalledWith(playSong(0));
-  });
-
-  it('should dispatch removeSong when remove button is clicked', () => {
-    (songComponent.instance() as Song).removeItem();
-    expect(dispatch).toHaveBeenCalledWith(removeSong(0));
-  });
-
-  it('should render the song', () => {
-    expect(songComponent.find('img').prop('src')).toBe(testSong.thumb);
-    expect(songComponent.find('h3').text()).toBe(testSong.title);
-    expect(songComponent.find('p').text()).toBe(parseTime(testSong.duration));
+  it('should render the thumbnail', () => {
+    expect(songComponent.find(Thumb).prop('src')).toBe(testSong.thumb);
   });
 
   it('should render the title and duration', () => {
@@ -71,5 +60,15 @@ describe('<Song />', () => {
     );
 
     expect(songComponent.contains(text)).toBe(true);
+  });
+
+  it('should dispatch playSong when song is clicked', () => {
+    songComponent.find(ListItem).simulate('click');
+    expect(dispatch).toHaveBeenCalledWith(playSong(0));
+  });
+
+  it('should dispatch removeSong when remove button is clicked', () => {
+    songComponent.find(IconButton).simulate('click');
+    expect(dispatch).toHaveBeenCalledWith(removeSong(0));
   });
 });
