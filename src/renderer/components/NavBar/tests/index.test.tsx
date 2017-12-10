@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 
-import NavBar from '../index';
+import NavBar from '..';
 
 describe('<NavBar />', () => {
   it('should render title', () => {

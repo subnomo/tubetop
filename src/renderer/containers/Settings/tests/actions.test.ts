@@ -1,4 +1,4 @@
-import { IState } from '../index';
+import { IState } from '..';
 import { saveSettings } from '../actions';
 import { SAVE_SETTINGS } from '../constants';
 

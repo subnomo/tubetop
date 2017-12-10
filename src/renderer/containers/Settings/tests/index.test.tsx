@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 
-import { Settings, IState, mapStateToProps } from '../index';
+import { Settings, IState, mapStateToProps } from '..';
 import { SettingsContainer, SettingsButton, SettingsTextField } from '../styles';
 import { saveSettings } from '../actions';
 
