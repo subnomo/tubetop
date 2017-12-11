@@ -4,6 +4,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import { Settings, IState, mapStateToProps } from '..';
 import { SettingsContainer, SettingsButton, SettingsTextField } from '../styles';
 import { saveSettings } from '../actions';
+import { mockState } from '../../../setupTests';
 
 describe('<Settings />', () => {
   let dispatch: jest.Mock<{}>;
@@ -49,40 +50,14 @@ describe('<Settings />', () => {
   });
 
   describe('mapStateToProps', () => {
-    it('should take state and return object containing settings', () => {
-      // Mock immutablejs
-      const state = {
-        get: (s: string) => {
-          if (s !== 'settings') return;
-
-          return {
-            get: (s: string) => {
-              if (s !== 'settings') return;
-
-              return settings;
-            }
-          };
-        }
-      };
+    it('should take the state and return an object containing settings', () => {
+      const state = mockState(settings, 'settings');
 
       expect(mapStateToProps(state).settings).toEqual(settings);
     });
 
-    it('should take default immutable state and return object containing settings', () => {
-      // Mock immutablejs
-      const state = {
-        get: (s: string) => {
-          if (s !== 'settings') return;
-
-          return {
-            get: (s: string) => {
-              if (s !== 'settings') return;
-
-              return { toObject: () => settings };
-            }
-          };
-        }
-      };
+    it('should take the default state and return an object containing settings', () => {
+      const state = mockState({ toObject: () => settings }, 'settings');
 
       expect(mapStateToProps(state).settings).toEqual(settings);
     });
