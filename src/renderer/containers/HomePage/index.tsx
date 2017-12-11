@@ -21,7 +21,7 @@ export class HomePage extends React.PureComponent<IProps, {}> {
   }
 }
 
-function mapStateToProps(state: any) {
+export function mapStateToProps(state: any) {
   const songs: SongData[] | List<SongData> = state.get('global').get('songs');
 
   return {
