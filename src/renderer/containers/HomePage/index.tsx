@@ -22,10 +22,10 @@ export class HomePage extends React.PureComponent<IProps, {}> {
 }
 
 export function mapStateToProps(state: any) {
-  const songs: SongData[] | List<SongData> = state.get('global').get('songs');
+  const songs: List<SongData> = state.get('global').get('songs');
 
   return {
-    songs: Array.isArray(songs) ? songs : songs.toArray(),
+    songs: songs.toArray(),
   };
 }
 

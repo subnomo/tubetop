@@ -52,11 +52,6 @@ describe('<HomePage />', () => {
 
   describe('mapStateToProps', () => {
     it('should take the state and return an object containing songs', () => {
-      const state = mockState(testSongs, 'global', 'songs');
-      expect(mapStateToProps(state).songs).toEqual(testSongs);
-    });
-
-    it('should take the default state and return an object containing songs', () => {
       const state = mockState({ toArray: () => testSongs }, 'global', 'songs');
       expect(mapStateToProps(state).songs).toEqual(testSongs);
     });

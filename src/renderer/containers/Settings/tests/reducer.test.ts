@@ -24,7 +24,10 @@ describe('settingsReducer', () => {
       youtubeAPIKey: 'test_youtube_api_key',
     };
 
-    const expectedResult = state.set('settings', settings);
+    const expectedResult = state.set('settings', state.get('settings')
+      .merge(settings)
+    );
+
     expect(settingsReducer(state, saveSettings(settings))).toEqual(expectedResult);
   });
 });

@@ -51,12 +51,6 @@ describe('<Settings />', () => {
 
   describe('mapStateToProps', () => {
     it('should take the state and return an object containing settings', () => {
-      const state = mockState(settings, 'settings');
-
-      expect(mapStateToProps(state).settings).toEqual(settings);
-    });
-
-    it('should take the default state and return an object containing settings', () => {
       const state = mockState({ toObject: () => settings }, 'settings');
 
       expect(mapStateToProps(state).settings).toEqual(settings);

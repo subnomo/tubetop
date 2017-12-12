@@ -327,14 +327,10 @@ export class Search extends React.PureComponent<IProps, IState> {
 }
 
 function mapStateToProps(state: any) {
-  let settings = state.get('settings').get('settings');
-
-  if (!settings.youtubeAPIKey) {
-    settings = settings.toObject();
-  }
+  const settings = state.get('settings').get('settings');
 
   return {
-    youtubeAPIKey: settings.youtubeAPIKey,
+    youtubeAPIKey: settings.get('youtubeAPIKey'),
   };
 }
 
