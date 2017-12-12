@@ -11,8 +11,8 @@ import {
 
 export interface AppAction {
   type: string;
-  song?: SongData;
-  songs?: SongData[];
+  song?: SongData | Partial<SongData>;
+  songs?: SongData[] | Partial<SongData>[];
   index?: number;
 }
 
@@ -37,14 +37,14 @@ export function addSongs(songs: SongData[]): AppAction {
   };
 }
 
-export function editSong(song: SongData): AppAction {
+export function editSong(song: Partial<SongData>): AppAction {
   return {
     type: EDIT_SONG,
     song,
   };
 }
 
-export function editSongs(songs: SongData[]): AppAction {
+export function editSongs(songs: Partial<SongData>[]): AppAction {
   return {
     type: EDIT_SONGS,
     songs,

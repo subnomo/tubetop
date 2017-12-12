@@ -52,7 +52,7 @@ export function mapStateToProps(state: any) {
   const settings = state.get('settings').get('settings');
 
   return {
-    settings: settings.youtubeAPIKey ? settings : settings.toObject(),
+    settings: settings.toObject(),
   };
 }
 

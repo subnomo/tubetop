@@ -27,11 +27,12 @@ export default function appReducer(state = initialState, action: AppAction) {
           } else {
             return { ...song, playing: false };
           }
-        }));
+        })
+      );
     case ADD_SONG:
-      return state.set('songs', [...state.get('songs'), action.song]);
+      return state.set('songs', state.get('songs').push(action.song));
     case ADD_SONGS:
-      return state.set('songs', [...state.get('songs'), ...action.songs]);
+      return state.set('songs', state.get('songs').concat(action.songs));
     case EDIT_SONG:
       return state.set('songs', state.get('songs')
         .map((song: SongData) => {
@@ -40,7 +41,8 @@ export default function appReducer(state = initialState, action: AppAction) {
           } else {
             return song;
           }
-        }));
+        })
+      );
     case EDIT_SONGS:
       return state.set('songs', state.get('songs')
         .map((song: SongData) => {
@@ -51,12 +53,10 @@ export default function appReducer(state = initialState, action: AppAction) {
           }
 
           return song;
-        }));
+        })
+      );
     case REMOVE_SONG:
-      return state.set('songs', [
-        ...state.get('songs').slice(0, action.index),
-        ...state.get('songs').slice(action.index + 1),
-      ]);
+      return state.set('songs', state.get('songs').delete(action.index));
     case CLEAR_SONGS:
       return initialState;
     default:
