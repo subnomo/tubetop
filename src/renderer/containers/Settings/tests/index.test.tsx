@@ -4,7 +4,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import { Settings, IState, mapStateToProps } from '..';
 import { SettingsContainer, SettingsButton, SettingsTextField } from '../styles';
 import { saveSettings } from '../actions';
-import { mockState } from '../../../setupTests';
+import { mockState } from 'utils/setupTests';
 
 describe('<Settings />', () => {
   let dispatch: jest.Mock<{}>;

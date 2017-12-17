@@ -2,9 +2,9 @@ import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 
 import { HomePage, mapStateToProps } from '..';
-import { SongData } from '../../../components/Song';
-import SongList from '../../../components/SongList';
-import { mockState } from '../../../setupTests';
+import { SongData } from 'components/Song';
+import SongList from 'components/SongList';
+import { mockState } from 'utils/setupTests';
 
 describe('<HomePage />', () => {
   let testSongs: SongData[];

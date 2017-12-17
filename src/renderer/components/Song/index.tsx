@@ -7,7 +7,7 @@ import Delete from 'material-ui-icons/Delete';
 
 import { parseTime } from './util';
 import { Thumb, ActiveListItemText } from './styles';
-import { AppAction, playSong, removeSong } from '../../containers/App/actions';
+import { AppAction, playSong, removeSong } from 'containers/App/actions';
 
 export interface SongData {
   key: string;

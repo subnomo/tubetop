@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ListItemText } from 'material-ui/List';
 
-import { primary } from '../../colors';
+import { primary } from 'utils/colors';
 
 export const Thumb = styled.img`
   border-radius: 5px;

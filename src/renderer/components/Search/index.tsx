@@ -12,8 +12,8 @@ import SearchIcon from 'material-ui-icons/Search';
 
 import { SearchBox, SearchInput, AutosuggestWrapper } from './styles';
 import { isYoutubeLink, isYoutubePlayList } from './util';
-import { AppAction, addSong, addSongs } from '../../containers/App/actions';
-import { SongData } from '../Song';
+import { AppAction, addSong, addSongs } from 'containers/App/actions';
+import { SongData } from 'components/Song';
 
 interface SearchParams {
   key: string;

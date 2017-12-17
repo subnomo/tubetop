@@ -17,7 +17,7 @@ import {
   REMOVE_SONG,
   CLEAR_SONGS,
 } from '../constants';
-import { SongData } from '../../../components/Song';
+import { SongData } from 'components/Song';
 
 describe('App Actions', () => {
   const testSongs: SongData[] = [

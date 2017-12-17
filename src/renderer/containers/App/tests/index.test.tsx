@@ -3,8 +3,8 @@ import { Route } from 'react-router-dom';
 import { shallow, ShallowWrapper } from 'enzyme';
 
 import App from '..';
-import NavBar from '../../../components/NavBar';
-import Player from '../../../components/Player';
+import NavBar from 'components/NavBar';
+import Player from 'components/Player';
 
 describe('<App />', () => {
   let appComponent: ShallowWrapper<any, any>;

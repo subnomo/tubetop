@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { List } from 'immutable';
 
-import { SongData } from '../../components/Song';
-import SongList from '../../components/SongList';
+import { SongData } from 'components/Song';
+import SongList from 'components/SongList';
 
 interface IProps extends React.Props<HomePage> {
   songs: SongData[];
