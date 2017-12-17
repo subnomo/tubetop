@@ -9,7 +9,7 @@ import LibraryMusic from 'material-ui-icons/LibraryMusic';
 import Settings from 'material-ui-icons/Settings';
 
 import { Root, MenuButton, FlexTypo, StyledLink, DrawerContainer } from './styles';
-import Search from '../Search';
+import Search from 'components/Search';
 
 interface IProps extends React.Props<NavBar> {
   title: string;

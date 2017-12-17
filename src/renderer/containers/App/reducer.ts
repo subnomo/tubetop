@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 
 import { AppAction } from './actions';
-import { SongData } from '../../components/Song';
+import { SongData } from 'components/Song';
 import {
   ADD_SONG,
   ADD_SONGS,

@@ -16,9 +16,9 @@ import RepeatOne from 'material-ui-icons/RepeatOne';
 import Shuffle from 'material-ui-icons/Shuffle';
 import DeleteSweep from 'material-ui-icons/DeleteSweep';
 
-import { SongData } from '../Song';
-import { parseTime } from '../Song/util';
-import { AppAction, playSong, clearSongs, editSongs } from '../../containers/App/actions';
+import { SongData } from 'components/Song';
+import { parseTime } from 'components/Song/util';
+import { AppAction, playSong, clearSongs, editSongs } from 'containers/App/actions';
 import { Order } from './util';
 import {
   PlayerContainer,

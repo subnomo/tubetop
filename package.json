@@ -16,10 +16,9 @@
       "!src/renderer/**/constants.{ts,tsx}",
       "!src/renderer/**/styles.{ts,tsx}",
       "!src/renderer/**/*.test.{ts,tsx}",
-      "!src/renderer/*/RbGenerated*/*.{ts,tsx}",
+      "!src/renderer/utils/**/*.{ts,tsx}",
       "!src/renderer/index.tsx",
-      "!src/renderer/*.ts",
-      "!src/renderer/*/*/Loadable.{ts,tsx}"
+      "!src/renderer/*.ts"
     ],
     "coverageThreshold": {
       "global": {
@@ -40,8 +39,8 @@
       "js"
     ],
     "setupFiles": [
-      "<rootDir>/src/renderer/shim.ts",
-      "<rootDir>/src/renderer/setupTests.ts"
+      "<rootDir>/src/renderer/utils/shim.ts",
+      "<rootDir>/src/renderer/utils/setupTests.ts"
     ],
     "testMatch": [
       "**/tests/*.(ts|tsx|js)"

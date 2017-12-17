@@ -3,7 +3,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import List from 'material-ui/List';
 
 import SongList from '..';
-import Song, { SongData } from '../../Song';
+import Song, { SongData } from 'components/Song';
 
 describe('<SongList />', () => {
   let testSongs: SongData[];

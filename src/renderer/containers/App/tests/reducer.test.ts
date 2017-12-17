@@ -10,7 +10,7 @@ import {
   removeSong,
   clearSongs,
 } from '../actions';
-import { SongData } from '../../../components/Song/index';
+import { SongData } from 'components/Song';
 
 describe('appReducer', () => {
   let state: any;

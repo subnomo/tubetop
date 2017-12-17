@@ -6,7 +6,7 @@ import IconButton from 'material-ui/IconButton';
 import { Song, SongData } from '..';
 import { parseTime } from '../util';
 import { ActiveListItemText, Thumb } from '../styles';
-import { playSong, removeSong } from '../../../containers/App/actions';
+import { playSong, removeSong } from 'containers/App/actions';
 
 describe('<Song />', () => {
   let dispatch: jest.Mock<{}>;

@@ -8,6 +8,7 @@ const {
   QuantumPlugin,
 } = require('fuse-box');
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 const DEV_PORT = 4444;
 const ASSETS = ['*.jpg', '*.png', '*.jpeg', '*.gif', '*.svg'];
@@ -106,6 +107,13 @@ Sparky.task('default', ['copy-html'], () => {
   }
 
   const { appBundle, rendererBundle } = bundle();
+
+  // Setup aliases
+  const dirs = fs.readdirSync('./src/renderer');
+
+  for (let dir of dirs) {
+    rendererBundle.alias(dir, `~/renderer/${dir}`);
+  }
 
   // Watch and hot-reload
   if (!ip) {
