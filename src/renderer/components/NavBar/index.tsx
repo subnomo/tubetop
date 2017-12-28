@@ -44,7 +44,7 @@ export default class NavBar extends React.PureComponent<IProps, IState> {
             </MenuButton>
 
             {/* Side drawer */}
-            <Drawer open={this.state.drawerOpen} onRequestClose={this.toggleDrawer}>
+            <Drawer open={this.state.drawerOpen} onClose={this.toggleDrawer}>
               <DrawerContainer
                 tabIndex={0}
                 role="button"

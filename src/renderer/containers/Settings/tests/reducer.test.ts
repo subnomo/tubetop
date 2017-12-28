@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import { IState } from '..';
 import settingsReducer from '../reducer';
 import { saveSettings } from '../actions';
+import { YOUTUBE_API_KEY } from 'utils/keys';
 
 describe('settingsReducer', () => {
   let state: any;
@@ -10,7 +11,7 @@ describe('settingsReducer', () => {
   beforeEach(() => {
     state = fromJS({
       settings: {
-        youtubeAPIKey: 'AIzaSyDwXKHjw1IoqsLQNf4yykNj6YEn-VlsOa8',
+        youtubeAPIKey: YOUTUBE_API_KEY,
       },
     });
   });
@@ -25,8 +26,7 @@ describe('settingsReducer', () => {
     };
 
     const expectedResult = state.set('settings', state.get('settings')
-      .merge(settings)
-    );
+      .merge(settings));
 
     expect(settingsReducer(state, saveSettings(settings))).toEqual(expectedResult);
   });

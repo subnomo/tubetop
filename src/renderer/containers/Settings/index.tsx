@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { SettingsContainer, SettingsTextField, SettingsButton } from './styles';
 import { saveSettings } from './actions';
+import { selectSettings } from './selectors';
 
 interface IProps extends React.Props<Settings> {
   dispatch: (action: any) => void;
@@ -49,7 +50,7 @@ export class Settings extends React.PureComponent<IProps, IState> {
 }
 
 export function mapStateToProps(state: any) {
-  const settings = state.get('settings').get('settings');
+  const settings = selectSettings(state);
 
   return {
     settings: settings.toObject(),

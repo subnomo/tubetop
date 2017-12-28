@@ -19,6 +19,7 @@ import DeleteSweep from 'material-ui-icons/DeleteSweep';
 import { SongData } from 'components/Song';
 import { parseTime } from 'components/Song/util';
 import { AppAction, playSong, clearSongs, editSongs } from 'containers/App/actions';
+import { selectSongs } from 'containers/App/selectors';
 import { Order } from './util';
 import {
   PlayerContainer,
@@ -233,7 +234,7 @@ export class Player extends React.PureComponent<IProps, IState> {
       const song = songs[current];
 
       // Get song info
-      ytdl.getInfo(song.id, (err, info) => {
+      ytdl.getInfo(song.id, (err: any, info: any) => {
         if (err) return console.error(err);
 
         // Get audio only formats
@@ -243,7 +244,7 @@ export class Player extends React.PureComponent<IProps, IState> {
         let maxBitrate = 0;
 
         // Get best possible quality
-        audioFormats.forEach((format, i) => {
+        audioFormats.forEach((format: any, i: number) => {
           if (format.audioBitrate > maxBitrate) {
             hqIndex = i;
             maxBitrate = format.audioBitrate;
@@ -422,7 +423,7 @@ export class Player extends React.PureComponent<IProps, IState> {
     const skipped = this.skipNext();
 
     if (!skipped && repeat === Repeat.All) {
-      this.props.dispatch(playSong(order[0]));
+      this.props.dispatch(playSong(order.get(0)));
     } else if (!skipped) {
       this.stop();
       this.setState({
@@ -587,7 +588,7 @@ export class Player extends React.PureComponent<IProps, IState> {
 }
 
 function mapStateToProps(state: any) {
-  const songs: List<SongData> = state.get('global').get('songs');
+  const songs: List<SongData> = selectSongs(state);
 
   return {
     songs: songs.toArray(),

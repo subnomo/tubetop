@@ -4,6 +4,7 @@ import { List } from 'immutable';
 
 import { SongData } from 'components/Song';
 import SongList from 'components/SongList';
+import { selectSongs } from 'containers/App/selectors';
 
 interface IProps extends React.Props<HomePage> {
   songs: SongData[];
@@ -22,7 +23,7 @@ export class HomePage extends React.PureComponent<IProps, {}> {
 }
 
 export function mapStateToProps(state: any) {
-  const songs: List<SongData> = state.get('global').get('songs');
+  const songs: List<SongData> = selectSongs(state);
 
   return {
     songs: songs.toArray(),

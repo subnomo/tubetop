@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route } from 'react-router-dom';
 import { shallow, ShallowWrapper } from 'enzyme';
 
-import App from '..';
+import { App } from '..';
 import NavBar from 'components/NavBar';
 import Player from 'components/Player';
 
