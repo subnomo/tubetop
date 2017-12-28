@@ -1,4 +1,4 @@
-import { SongData } from 'components/Song';
+  import { SongData } from 'components/Song';
 import {
   PLAY_SONG,
   ADD_SONG,
@@ -7,6 +7,9 @@ import {
   EDIT_SONGS,
   REMOVE_SONG,
   CLEAR_SONGS,
+  SEARCH_SONG,
+  SEARCH_SUCCESS,
+  SEARCH_FAILURE,
 } from './constants';
 
 export interface AppAction {
@@ -14,6 +17,9 @@ export interface AppAction {
   song?: SongData | Partial<SongData>;
   songs?: SongData[] | Partial<SongData>[];
   index?: number;
+  query?: string;
+  results?: any[];
+  error?: any;
 }
 
 export function playSong(index: number): AppAction {
@@ -61,5 +67,26 @@ export function removeSong(index: number): AppAction {
 export function clearSongs(): AppAction {
   return {
     type: CLEAR_SONGS,
+  };
+}
+
+export function searchSong(query: string): AppAction {
+  return {
+    type: SEARCH_SONG,
+    query,
+  };
+}
+
+export function searchSuccess(results: any[]): AppAction {
+  return {
+    type: SEARCH_SUCCESS,
+    results,
+  };
+}
+
+export function searchFailure(error: any): AppAction {
+  return {
+    type: SEARCH_FAILURE,
+    error,
   };
 }

@@ -46,6 +46,11 @@ describe('appReducer', () => {
   beforeEach(() => {
     state = fromJS({
       songs: [],
+      search: {
+        loading: false,
+        error: false,
+        results: [],
+      },
     });
 
     state = state.set('songs', state.get('songs').concat(testSongs));
@@ -54,6 +59,11 @@ describe('appReducer', () => {
   it('should return the initial state', () => {
     const expectedResult = fromJS({
       songs: [],
+      search: {
+        loading: false,
+        error: false,
+        results: [],
+      },
     });
 
     expect(appReducer(undefined, {} as any)).toEqual(expectedResult);
@@ -158,6 +168,11 @@ describe('appReducer', () => {
   it('should handle the clearSongs action correctly', () => {
     const expectedResult = fromJS({
       songs: [],
+      search: {
+        loading: false,
+        error: false,
+        results: [],
+      },
     });
 
     expect(appReducer(state, clearSongs())).toEqual(expectedResult);

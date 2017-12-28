@@ -1,10 +1,11 @@
 import { fromJS } from 'immutable';
 
 import { SAVE_SETTINGS } from './constants';
+import { YOUTUBE_API_KEY } from 'utils/keys';
 
 const initialState = fromJS({
   settings: {
-    youtubeAPIKey: 'AIzaSyDwXKHjw1IoqsLQNf4yykNj6YEn-VlsOa8',
+    youtubeAPIKey: YOUTUBE_API_KEY,
   },
 });
 

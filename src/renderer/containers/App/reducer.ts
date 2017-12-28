@@ -10,10 +10,18 @@ import {
   EDIT_SONGS,
   REMOVE_SONG,
   CLEAR_SONGS,
+  SEARCH_SONG,
+  SEARCH_SUCCESS,
+  SEARCH_FAILURE,
 } from './constants';
 
 const initialState = fromJS({
   songs: [],
+  search: {
+    loading: false,
+    error: false,
+    results: [],
+  },
 });
 
 export default function appReducer(state = initialState, action: AppAction) {
@@ -59,6 +67,18 @@ export default function appReducer(state = initialState, action: AppAction) {
       return state.set('songs', state.get('songs').delete(action.index));
     case CLEAR_SONGS:
       return initialState;
+    case SEARCH_SONG:
+      return state
+        .setIn(['search', 'loading'], true)
+        .setIn(['search', 'error'], false);
+    case SEARCH_SUCCESS:
+      return state
+        .setIn(['search', 'results'], action.results)
+        .setIn(['search', 'loading'], false);
+    case SEARCH_FAILURE:
+      return state
+        .setIn(['search', 'error'], action.error)
+        .setIn(['search', 'loading'], false);
     default:
       return state;
   }

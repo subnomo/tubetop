@@ -5,3 +5,6 @@ export const EDIT_SONG = 'tubetop/App/EDIT_SONG';
 export const EDIT_SONGS = 'tubetop/App/EDIT_SONGS';
 export const REMOVE_SONG = 'tubetop/App/REMOVE_SONG';
 export const CLEAR_SONGS = 'tubetop/App/CLEAR_SONGS';
+export const SEARCH_SONG = 'tubetop/App/SEARCH_SONG';
+export const SEARCH_SUCCESS = 'tubetop/App/SEARCH_SUCCESS';
+export const SEARCH_FAILURE = 'tubetop/App/SEARCH_FAILURE';
