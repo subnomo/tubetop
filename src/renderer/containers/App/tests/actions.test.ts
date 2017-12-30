@@ -6,6 +6,9 @@ import {
   editSongs,
   removeSong,
   clearSongs,
+  searchSong,
+  searchSuccess,
+  searchFailure,
 } from '../actions';
 
 import {
@@ -16,6 +19,9 @@ import {
   EDIT_SONGS,
   REMOVE_SONG,
   CLEAR_SONGS,
+  SEARCH_SONG,
+  SEARCH_SUCCESS,
+  SEARCH_FAILURE,
 } from '../constants';
 import { SongData } from 'components/Song';
 
@@ -122,6 +128,50 @@ describe('App Actions', () => {
       };
 
       expect(clearSongs()).toEqual(expectedResult);
+    });
+  });
+
+  describe('searchSong', () => {
+    it('should return the correct type and the passed query', () => {
+      const expectedResult = {
+        type: SEARCH_SONG,
+        query: 'abc',
+      };
+
+      expect(searchSong('abc')).toEqual(expectedResult);
+    });
+  });
+
+  describe('searchSuccess', () => {
+    it('should return the correct type and the passed results', () => {
+      const resultsArray = [
+        { kind: 'youtube#searchResults' },
+      ];
+
+      const expectedResult = {
+        type: SEARCH_SUCCESS,
+        results: resultsArray,
+      };
+
+      expect(searchSuccess(resultsArray)).toEqual(expectedResult);
+    });
+  });
+
+  describe('searchFailure', () => {
+    it('should return the correct type and the passed error', () => {
+      const error = {
+        response: {
+          ok: false,
+          status: 400,
+        },
+      };
+
+      const expectedResult = {
+        type: SEARCH_FAILURE,
+        error,
+      };
+
+      expect(searchFailure(error)).toEqual(expectedResult);
     });
   });
 });

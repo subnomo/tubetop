@@ -12,6 +12,16 @@ export const selectSearch = createSelector(
   (globalState: any) => globalState.get('search'),
 );
 
+export const selectSearchLoading = createSelector(
+  selectSearch,
+  (searchState: any) => searchState.get('loading'),
+);
+
+export const selectSearchError = createSelector(
+  selectSearch,
+  (searchState: any) => searchState.get('error'),
+);
+
 export const selectSearchResults = createSelector(
   selectSearch,
   (searchState: any) => searchState.get('results'),
