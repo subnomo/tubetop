@@ -81,6 +81,13 @@ function bundle() {
         resolve: 'assets/',
     }));
 
+  // Setup aliases
+  const dirs = fs.readdirSync('./src/renderer');
+
+  for (let dir of dirs) {
+    rendererBundle.alias(dir, `~/renderer/${dir}`);
+  }
+
   return {
     appBundle,
     rendererBundle,
@@ -107,13 +114,6 @@ Sparky.task('default', ['copy-html'], () => {
   }
 
   const { appBundle, rendererBundle } = bundle();
-
-  // Setup aliases
-  const dirs = fs.readdirSync('./src/renderer');
-
-  for (let dir of dirs) {
-    rendererBundle.alias(dir, `~/renderer/${dir}`);
-  }
 
   // Watch and hot-reload
   if (!ip) {
