@@ -105,7 +105,7 @@ export function* searchExtra(action: AppAction) {
   }
 
   items.forEach((item: any, index: number) => {
-    if (item.id.kind === 'youtube#video') {
+    if (item.id && item.id.kind === 'youtube#video') {
       videoIDs.push(item.id.videoId);
     } else if (item.kind === 'youtube#video') {
       videoIDs.push(item.id);

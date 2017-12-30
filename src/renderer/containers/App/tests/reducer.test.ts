@@ -9,6 +9,9 @@ import {
   editSongs,
   removeSong,
   clearSongs,
+  searchSong,
+  searchSuccess,
+  searchFailure,
 } from '../actions';
 import { SongData } from 'components/Song';
 
@@ -176,5 +179,40 @@ describe('appReducer', () => {
     });
 
     expect(appReducer(state, clearSongs())).toEqual(expectedResult);
+  });
+
+  it('should handle the searchSong action correctly', () => {
+    const expectedResult = state
+      .setIn(['search', 'loading'], true)
+      .setIn(['search', 'error'], false);
+
+    expect(appReducer(state, searchSong('abc'))).toEqual(expectedResult);
+  });
+
+  it('should handle the searchSuccess action correctly', () => {
+    const resultsArray = [
+      { kind: 'youtube#searchResults' },
+    ];
+
+    const expectedResult = state
+      .setIn(['search', 'results'], resultsArray)
+      .setIn(['search', 'loading'], false);
+
+    expect(appReducer(state, searchSuccess(resultsArray))).toEqual(expectedResult);
+  });
+
+  it('should handle the searchFailure action correctly', () => {
+    const error = {
+      response: {
+        ok: false,
+        status: 400,
+      },
+    };
+
+    const expectedResult = state
+      .setIn(['search', 'error'], error)
+      .setIn(['search', 'loading'], false);
+
+    expect(appReducer(state, searchFailure(error))).toEqual(expectedResult);
   });
 });
