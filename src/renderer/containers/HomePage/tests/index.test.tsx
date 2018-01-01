@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
+import { fromJS } from 'immutable';
 
 import { HomePage, mapStateToProps } from '..';
 import { SongData } from 'components/Song';
 import SongList from 'components/SongList';
-import { mockState } from 'utils/setupTests';
 
 describe('<HomePage />', () => {
   let testSongs: SongData[];
@@ -52,8 +52,13 @@ describe('<HomePage />', () => {
 
   describe('mapStateToProps', () => {
     it('should take the state and return an object containing songs', () => {
-      const state = mockState({ toArray: () => testSongs }, 'global', 'songs');
-      expect(mapStateToProps(state).songs).toEqual(testSongs);
+      const mockedState = fromJS({
+        global: {
+          songs: testSongs,
+        },
+      });
+
+      expect(mapStateToProps(mockedState).songs).toEqual(testSongs);
     });
   });
 });

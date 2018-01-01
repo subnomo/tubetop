@@ -18,11 +18,6 @@ export interface SongData {
   playing: boolean;
 }
 
-export interface ImmutableSongData extends Map<string, any> {
-  toJS(): SongData;
-  get<K extends keyof SongData>(key: K): SongData[K];
-}
-
 interface IProps extends React.Props<Song> {
   dispatch: (action: AppAction) => void;
   song: SongData;

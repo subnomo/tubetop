@@ -36,7 +36,7 @@ describe('Order', () => {
     });
   });
 
-  describe('add', () => {
+  describe('remove', () => {
     it('should remove a number at index, and decrement right elements', () => {
       order.remove(1);
       expect((order as any).array).toEqual([0, 1]);
@@ -63,6 +63,12 @@ describe('Order', () => {
       order.remove(2);
       order.shuffle(0);
       expect(order.get(0)).toBe(0);
+    });
+
+    it('should just return given an empty order', () => {
+      order = new Order();
+      order.shuffle();
+      expect((order as any).array).toEqual([]);
     });
   });
 
