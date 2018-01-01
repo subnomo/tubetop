@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 
 import { SongData } from 'components/Song';
 import SongList from 'components/SongList';
@@ -23,10 +23,10 @@ export class HomePage extends React.PureComponent<IProps, {}> {
 }
 
 export function mapStateToProps(state: any) {
-  const songs: List<SongData> = selectSongs(state);
+  const songs: List<Map<any, SongData>> = selectSongs(state);
 
   return {
-    songs: songs.toArray(),
+    songs: songs.toJS(),
   };
 }
 

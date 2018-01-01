@@ -157,8 +157,6 @@ export class Player extends React.PureComponent<IProps, IState> {
     let newOrder = new Order(order);
 
     // Remove deleted songs from order
-    let deletedSongs: number[] = [];
-
     for (let i = 0; i < songs.length; i++) {
       let songExists = false;
 
@@ -169,14 +167,10 @@ export class Player extends React.PureComponent<IProps, IState> {
         }
       }
 
-      if (!songExists) deletedSongs.push(i);
+      if (!songExists) newOrder.remove(i);
     }
 
-    newOrder.remove(deletedSongs);
-
     // Add new songs to order
-    let newSongs: number[] = [];
-
     for (let i = 0; i < nextProps.songs.length; i++) {
       let newSong = true;
 
@@ -187,10 +181,8 @@ export class Player extends React.PureComponent<IProps, IState> {
         }
       }
 
-      if (newSong) newSongs.push(i);
+      if (newSong) newOrder.add(i);
     }
-
-    newOrder.add(newSongs);
 
     if (!order.equals(newOrder)) {
       this.setState({
@@ -591,7 +583,7 @@ function mapStateToProps(state: any) {
   const songs: List<SongData> = selectSongs(state);
 
   return {
-    songs: songs.toArray(),
+    songs: songs.toJS(),
   };
 }
 

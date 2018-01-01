@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
+import { fromJS } from 'immutable';
 
 import { Settings, IState, mapStateToProps } from '..';
 import { SettingsContainer, SettingsButton, SettingsTextField } from '../styles';
 import { saveSettings } from '../actions';
-import { mockState } from 'utils/setupTests';
 
 describe('<Settings />', () => {
   let dispatch: jest.Mock<{}>;
@@ -51,9 +51,13 @@ describe('<Settings />', () => {
 
   describe('mapStateToProps', () => {
     it('should take the state and return an object containing settings', () => {
-      const state = mockState({ toObject: () => settings }, 'settings');
+      const mockedState = fromJS({
+        settings: {
+          settings,
+        },
+      });
 
-      expect(mapStateToProps(state).settings).toEqual(settings);
+      expect(mapStateToProps(mockedState).settings).toEqual(settings);
     });
   });
 });

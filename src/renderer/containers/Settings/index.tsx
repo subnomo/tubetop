@@ -53,7 +53,7 @@ export function mapStateToProps(state: any) {
   const settings = selectSettings(state);
 
   return {
-    settings: settings.toObject(),
+    settings: settings.toJS(),
   };
 }
 
