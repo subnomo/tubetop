@@ -111,6 +111,12 @@
     immutable "^3.8.1"
     redux "^3.6.0"
 
+"@types/uuid@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.3.tgz#121ace265f5569ce40f4f6d0ff78a338c732a754"
+  dependencies:
+    "@types/node" "*"
+
 "@types/whatwg-fetch@^0.0.33":
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/@types/whatwg-fetch/-/whatwg-fetch-0.0.33.tgz#19c0d2863c8cb2380f21a1c736b79cbf7895bb13"
@@ -4478,10 +4484,6 @@ uglify-to-browserify@~1.0.0:
 uid-number@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/uid-number/-/uid-number-0.0.6.tgz#0ea10e8035e8eb5b8e4449f06da1c730663baa81"
-
-ulid@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/ulid/-/ulid-2.2.2.tgz#27cfa22848a213fb31bd5bc31dfc6712c1ad1471"
 
 ultron@1.0.x:
   version "1.0.2"
