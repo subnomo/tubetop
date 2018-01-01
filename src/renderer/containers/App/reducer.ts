@@ -66,18 +66,18 @@ export default function appReducer(state = initialState, action: AppAction) {
     case REMOVE_SONG:
       return state.set('songs', state.get('songs').delete(action.index));
     case CLEAR_SONGS:
-      return initialState;
+      return state.set('songs', state.get('songs').clear());
     case SEARCH_SONG:
       return state
         .setIn(['search', 'loading'], true)
         .setIn(['search', 'error'], false);
     case SEARCH_SUCCESS:
       return state
-        .setIn(['search', 'results'], action.results)
+        .setIn(['search', 'results'], fromJS(action.results))
         .setIn(['search', 'loading'], false);
     case SEARCH_FAILURE:
       return state
-        .setIn(['search', 'error'], action.error)
+        .setIn(['search', 'error'], fromJS(action.error))
         .setIn(['search', 'loading'], false);
     default:
       return state;

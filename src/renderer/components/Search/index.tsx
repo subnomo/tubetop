@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { debounce } from 'lodash';
-import { ulid } from 'ulid';
+import { v4 as uuid } from 'uuid';
 import * as Autosuggest from 'react-autosuggest';
 import * as match from 'autosuggest-highlight/match';
 import * as parse from 'autosuggest-highlight/parse';
@@ -9,11 +9,11 @@ import { MenuItem } from 'material-ui/Menu';
 import Paper from 'material-ui/Paper';
 import SearchIcon from 'material-ui-icons/Search';
 
-import { SearchBox, SearchInput, AutosuggestWrapper } from './styles';
-import { parseDuration } from './util';
 import { AppAction, addSong, addSongs, searchSong } from 'containers/App/actions';
 import { selectSearchResults } from 'containers/App/selectors';
 import { SongData } from 'components/Song';
+import { SearchBox, SearchInput, AutosuggestWrapper } from './styles';
+import { parseDuration } from './util';
 
 interface IProps extends React.Props<Search> {
   dispatch: (action: AppAction) => void;
@@ -33,7 +33,7 @@ export class Search extends React.PureComponent<IProps, IState> {
 
     this.state = {
       value: '',
-      suggestions: [],
+      suggestions: props.searchResults,
     };
 
     this.debouncedHSFR = debounce(this.getSuggestions, 300);
@@ -77,7 +77,7 @@ export class Search extends React.PureComponent<IProps, IState> {
     const { suggestion } = opts;
 
     const song: SongData = {
-      key: ulid(),
+      key: uuid(),
       id: suggestion.id.videoId || suggestion.id,
       title: suggestion.snippet.title,
       thumb: suggestion.snippet.thumbnails.medium.url,
@@ -152,7 +152,7 @@ export class Search extends React.PureComponent<IProps, IState> {
   }
 
   render() {
-    let { value, suggestions } = this.state;
+    const { value, suggestions } = this.state;
 
     return (
       <AutosuggestWrapper>
@@ -178,9 +178,9 @@ export class Search extends React.PureComponent<IProps, IState> {
   }
 }
 
-function mapStateToProps(state: any) {
+export function mapStateToProps(state: any) {
   return {
-    searchResults: selectSearchResults(state),
+    searchResults: selectSearchResults(state).toJS(),
   };
 }
 

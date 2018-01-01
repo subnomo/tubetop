@@ -195,7 +195,7 @@ describe('appReducer', () => {
     ];
 
     const expectedResult = state
-      .setIn(['search', 'results'], resultsArray)
+      .setIn(['search', 'results'], fromJS(resultsArray))
       .setIn(['search', 'loading'], false);
 
     expect(appReducer(state, searchSuccess(resultsArray))).toEqual(expectedResult);
@@ -210,7 +210,7 @@ describe('appReducer', () => {
     };
 
     const expectedResult = state
-      .setIn(['search', 'error'], error)
+      .setIn(['search', 'error'], fromJS(error))
       .setIn(['search', 'loading'], false);
 
     expect(appReducer(state, searchFailure(error))).toEqual(expectedResult);

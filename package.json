@@ -17,8 +17,7 @@
       "!src/renderer/**/styles.{ts,tsx}",
       "!src/renderer/**/*.test.{ts,tsx}",
       "!src/renderer/utils/**/*.{ts,tsx}",
-      "!src/renderer/index.tsx",
-      "!src/renderer/*.ts"
+      "!src/renderer/*.{ts,tsx}"
     ],
     "coverageThreshold": {
       "global": {
@@ -66,6 +65,7 @@
     "@types/react-router-dom": "^4.2.3",
     "@types/react-router-redux": "^5.0.10",
     "@types/redux-immutable": "^3.0.38",
+    "@types/uuid": "^3.4.3",
     "@types/whatwg-fetch": "^0.0.33",
     "electron-devtools-installer": "^2.2.1",
     "enzyme": "^3.2.0",
@@ -101,7 +101,7 @@
     "redux-saga": "^0.16.0",
     "reselect": "^3.0.1",
     "styled-components": "^2.2.3",
-    "ulid": "^2.2.2",
+    "uuid": "^3.1.0",
     "whatwg-fetch": "^2.0.3",
     "ytdl-core": "^0.18.3"
   }
