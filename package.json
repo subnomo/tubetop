@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --coverage",
-    "test:nocov": "jest"
+    "test:nocov": "jest",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -67,6 +68,7 @@
     "@types/redux-immutable": "^3.0.38",
     "@types/uuid": "^3.4.3",
     "@types/whatwg-fetch": "^0.0.33",
+    "coveralls": "^3.0.0",
     "electron-devtools-installer": "^2.2.1",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
