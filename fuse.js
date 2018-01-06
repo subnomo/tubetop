@@ -68,7 +68,7 @@ initFuse();
 
 function bundle() {
   // Bundle main electron code
-  const appBundle = fuse.bundle('app').instructions('> [index.ts]');
+  const appBundle = fuse.bundle('app').instructions('> [main.ts]');
 
   // Bundle electron renderer code
   const rendererBundle = fuseRenderer
