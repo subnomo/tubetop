@@ -18,7 +18,7 @@ import DeleteSweep from 'material-ui-icons/DeleteSweep';
 
 import { SongData } from 'components/Song';
 import { parseTime } from 'components/Song/util';
-import { AppAction, playSong, clearSongs, editSongs } from 'containers/App/actions';
+import { AppAction, playSong, clearSongs, editSongs, stopSong } from 'containers/App/actions';
 import { selectSongs } from 'containers/App/selectors';
 import { Order } from './util';
 import {
@@ -80,16 +80,9 @@ export class Player extends React.PureComponent<IProps, IState> {
     };
 
     // Media keys
-    ipcRenderer.on('play-pause', () => {
-      if (this.state.playing && !this.state.paused) {
-        this.pause();
-      } else {
-        this.play();
-      }
-    });
-
+    ipcRenderer.on('play-pause', this.toggle);
     ipcRenderer.on('stop', this.stop);
-    ipcRenderer.on('next-track', () => this.skipNext());
+    ipcRenderer.on('next-track', this.skipNext);
     ipcRenderer.on('previous-track', this.skipPrevious);
   }
 
@@ -141,9 +134,9 @@ export class Player extends React.PureComponent<IProps, IState> {
         }
       }
 
-      // If no new song has been played, just stop the current song
+      // If stopped, reset state
       if (!newSong) {
-        this.stop();
+        this.reset();
       }
     }
 
@@ -278,17 +271,30 @@ export class Player extends React.PureComponent<IProps, IState> {
     }
   }
 
-  stop = () => {
+  toggle = () => {
+    if (this.state.playing && !this.state.paused) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
+
+  reset = () => {
     this.audio.pause();
     this.audio.currentTime = 0;
     document.title = 'tubetop';
 
     this.setState({
+      current: 0,
       progress: 0,
       time: 0,
       playing: false,
       paused: false,
     });
+  }
+
+  stop = () => {
+    this.props.dispatch(stopSong(this.state.current));
   }
 
   skipPrevious = () => {
@@ -418,9 +424,6 @@ export class Player extends React.PureComponent<IProps, IState> {
       this.props.dispatch(playSong(order.get(0)));
     } else if (!skipped) {
       this.stop();
-      this.setState({
-        current: 0,
-      });
     }
   }
 
@@ -579,7 +582,7 @@ export class Player extends React.PureComponent<IProps, IState> {
   }
 }
 
-function mapStateToProps(state: any) {
+export function mapStateToProps(state: any) {
   const songs: List<SongData> = selectSongs(state);
 
   return {
