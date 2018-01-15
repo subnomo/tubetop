@@ -1,6 +1,7 @@
   import { SongData } from 'components/Song';
 import {
   PLAY_SONG,
+  STOP_SONG,
   ADD_SONG,
   ADD_SONGS,
   EDIT_SONG,
@@ -25,6 +26,13 @@ export interface AppAction {
 export function playSong(index: number): AppAction {
   return {
     type: PLAY_SONG,
+    index,
+  };
+}
+
+export function stopSong(index: number): AppAction {
+  return {
+    type: STOP_SONG,
     index,
   };
 }

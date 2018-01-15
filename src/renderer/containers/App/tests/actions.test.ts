@@ -1,5 +1,6 @@
 import {
   playSong,
+  stopSong,
   addSong,
   addSongs,
   editSong,
@@ -13,6 +14,7 @@ import {
 
 import {
   PLAY_SONG,
+  STOP_SONG,
   ADD_SONG,
   ADD_SONGS,
   EDIT_SONG,
@@ -63,6 +65,17 @@ describe('App Actions', () => {
       };
 
       expect(playSong(3)).toEqual(expectedResult);
+    });
+  });
+
+  describe('stopSong', () => {
+    it('should return the correct type and the passed index', () => {
+      const expectedResult = {
+        type: STOP_SONG,
+        index: 3,
+      };
+
+      expect(stopSong(3)).toEqual(expectedResult);
     });
   });
 

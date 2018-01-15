@@ -6,6 +6,7 @@ import {
   ADD_SONG,
   ADD_SONGS,
   PLAY_SONG,
+  STOP_SONG,
   EDIT_SONG,
   EDIT_SONGS,
   REMOVE_SONG,
@@ -34,6 +35,17 @@ export default function appReducer(state = initialState, action: AppAction) {
             return { ...song, playing: true };
           } else {
             return { ...song, playing: false };
+          }
+        })
+      );
+    case STOP_SONG:
+      return state.set('songs', state.get('songs')
+        .map((song: SongData, i: number) => {
+          // Stop given song
+          if (i === action.index) {
+            return { ...song, playing: false };
+          } else {
+            return song;
           }
         })
       );

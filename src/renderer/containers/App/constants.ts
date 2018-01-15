@@ -1,4 +1,5 @@
 export const PLAY_SONG = 'tubetop/App/PLAY_SONG';
+export const STOP_SONG = 'tubetop/App/STOP_SONG';
 export const ADD_SONG = 'tubetop/App/ADD_SONG';
 export const ADD_SONGS = 'tubetop/App/ADD_SONGS';
 export const EDIT_SONG = 'tubetop/App/EDIT_SONG';

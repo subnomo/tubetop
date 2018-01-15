@@ -7,6 +7,8 @@
   "author": "Alex Taylor <alex@subnomo.me>",
   "license": "MIT",
   "scripts": {
+    "start": "node fuse",
+    "build:dist": "node fuse dist",
     "test": "jest --coverage",
     "test:nocov": "jest",
     "coveralls": "cat ./coverage/lcov.info | coveralls"

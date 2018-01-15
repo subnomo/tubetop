@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import appReducer from '../reducer';
 import {
   playSong,
+  stopSong,
   addSong,
   addSongs,
   editSong,
@@ -75,6 +76,13 @@ describe('appReducer', () => {
   it('should handle the playSong action correctly', () => {
     const newSongs: any = appReducer(state, playSong(0)).get('songs');
     expect(newSongs.get(0).playing).toBe(true);
+    expect(newSongs.get(1).playing).toBe(false);
+    expect(newSongs.get(2).playing).toBe(false);
+  });
+
+  it('should handle the stopSong action correctly', () => {
+    const newSongs: any = appReducer(state, stopSong(1)).get('songs');
+    expect(newSongs.get(0).playing).toBe(false);
     expect(newSongs.get(1).playing).toBe(false);
     expect(newSongs.get(2).playing).toBe(false);
   });
