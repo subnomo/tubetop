@@ -107,6 +107,6 @@
     "styled-components": "^2.2.3",
     "uuid": "^3.1.0",
     "whatwg-fetch": "^2.0.3",
-    "ytdl-core": "^0.18.3"
+    "ytdl-core": "^0.18.7"
   }
 }
