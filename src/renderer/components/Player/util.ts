@@ -14,7 +14,7 @@ export class Order {
     } else if (Array.isArray(order)) {
       this.array = order;
       this.length = order.length;
-      this.sort();
+      // this.sort();
     } else {
       this.array = [...order.array];
       this.length = order.length;

@@ -4,7 +4,7 @@ describe('Order', () => {
   let order: Order;
 
   beforeEach(() => {
-    order = new Order([1, 2, 3]);
+    order = new Order([0, 1, 2]);
   });
 
   describe('constructor', () => {
