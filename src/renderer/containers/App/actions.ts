@@ -15,8 +15,8 @@ import {
 
 export interface AppAction {
   type: string;
-  song?: SongData | Partial<SongData>;
-  songs?: SongData[] | Partial<SongData>[];
+  song?: Partial<SongData>;
+  songs?: Partial<SongData>[];
   index?: number;
   query?: string;
   results?: any[];

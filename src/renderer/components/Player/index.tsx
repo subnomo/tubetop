@@ -39,11 +39,11 @@ interface IProps extends React.Props<Player> {
   songs: SongData[];
 }
 
-const enum Repeat {
+export const enum Repeat {
   None,
   All,
   One,
-};
+}
 
 interface IState {
   current: number;
@@ -60,7 +60,7 @@ interface IState {
 }
 
 export class Player extends React.PureComponent<IProps, IState> {
-  private audio: HTMLAudioElement;
+  public audio: HTMLAudioElement;
 
   constructor(props: IProps) {
     super(props);
@@ -216,10 +216,8 @@ export class Player extends React.PureComponent<IProps, IState> {
 
       document.title = `${songs[current].title} - tubetop`;
 
-      const song = songs[current];
-
       // Get song info
-      ytdl.getInfo(song.id, (err: any, info: any) => {
+      ytdl.getInfo(songs[current].id, (err: any, info: any) => {
         if (err) return console.error(err);
 
         // Get audio only formats
@@ -398,14 +396,9 @@ export class Player extends React.PureComponent<IProps, IState> {
     const progress = (this.audio.currentTime / songs[current].duration) * 100;
     const roundedTime = Math.round(this.audio.currentTime);
 
-    if (roundedTime !== time) {
-      this.setState({
-        time: roundedTime,
-      });
-    }
-
     this.setState({
       progress,
+      time: roundedTime,
     });
   }
 
