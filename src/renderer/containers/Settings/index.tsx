@@ -3,17 +3,18 @@ import { connect } from 'react-redux';
 
 import { SettingsContainer, SettingsTextField, SettingsButton } from './styles';
 import { saveSettings } from './actions';
+import { selectSettings } from './selectors';
 
 interface IProps extends React.Props<Settings> {
   dispatch: (action: any) => void;
   settings: Partial<IState>;
 }
 
-interface IState {
+export interface IState {
   youtubeAPIKey: string;
 }
 
-class Settings extends React.PureComponent<IProps, IState> {
+export class Settings extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
@@ -48,11 +49,11 @@ class Settings extends React.PureComponent<IProps, IState> {
   }
 }
 
-function mapStateToProps(state: any) {
-  const settings = state.get('settings').get('settings');
+export function mapStateToProps(state: any) {
+  const settings = selectSettings(state);
 
   return {
-    settings: settings.youtubeAPIKey ? settings : settings.toObject(),
+    settings: settings.toJS(),
   };
 }
 

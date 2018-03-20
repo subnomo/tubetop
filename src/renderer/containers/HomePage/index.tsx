@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 
-import { SongData } from '../../components/Song';
-import SongList from '../../components/SongList';
+import { SongData } from 'components/Song';
+import SongList from 'components/SongList';
+import { selectSongs } from 'containers/App/selectors';
 
 interface IProps extends React.Props<HomePage> {
   songs: SongData[];
@@ -21,11 +22,11 @@ export class HomePage extends React.PureComponent<IProps, {}> {
   }
 }
 
-function mapStateToProps(state: any) {
-  const songs: SongData[] | List<SongData> = state.get('global').get('songs');
+export function mapStateToProps(state: any) {
+  const songs: List<Map<any, SongData>> = selectSongs(state);
 
   return {
-    songs: Array.isArray(songs) ? songs : songs.toArray(),
+    songs: songs.toJS(),
   };
 }
 

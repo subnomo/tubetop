@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
 // Setup hot reloading
-import './hmr';
+import 'utils/hmr';
 
 // Import root container
-import App from './containers/App';
+import App from 'containers/App';
 
 // Import stateful components
 import { store, history } from './store';

@@ -8,6 +8,7 @@ const {
   QuantumPlugin,
 } = require('fuse-box');
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 const DEV_PORT = 4444;
 const ASSETS = ['*.jpg', '*.png', '*.jpeg', '*.gif', '*.svg'];
@@ -67,7 +68,7 @@ initFuse();
 
 function bundle() {
   // Bundle main electron code
-  const appBundle = fuse.bundle('app').instructions('> [index.ts]');
+  const appBundle = fuse.bundle('app').instructions('> [main.ts]');
 
   // Bundle electron renderer code
   const rendererBundle = fuseRenderer
@@ -79,6 +80,13 @@ function bundle() {
         dest: 'assets',
         resolve: 'assets/',
     }));
+
+  // Setup aliases
+  const dirs = fs.readdirSync('./src/renderer');
+
+  for (let dir of dirs) {
+    rendererBundle.alias(dir, `~/renderer/${dir}`);
+  }
 
   return {
     appBundle,

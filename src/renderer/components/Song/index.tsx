@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Map } from 'immutable';
 import { ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction } from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui-icons/Delete';
 
 import { parseTime } from './util';
 import { Thumb, ActiveListItemText } from './styles';
-import { AppAction, playSong, removeSong } from '../../containers/App/actions';
+import { AppAction, playSong, removeSong } from 'containers/App/actions';
 
 export interface SongData {
   key: string;
@@ -23,7 +24,7 @@ interface IProps extends React.Props<Song> {
   index: number;
 }
 
-class Song extends React.PureComponent<IProps, {}> {
+export class Song extends React.PureComponent<IProps, {}> {
   playItem = () => {
     const { dispatch, index } = this.props;
 

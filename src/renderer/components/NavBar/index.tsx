@@ -9,7 +9,7 @@ import LibraryMusic from 'material-ui-icons/LibraryMusic';
 import Settings from 'material-ui-icons/Settings';
 
 import { Root, MenuButton, FlexTypo, StyledLink, DrawerContainer } from './styles';
-import Search from '../Search';
+import Search from 'components/Search';
 
 interface IProps extends React.Props<NavBar> {
   title: string;
@@ -20,8 +20,8 @@ interface IState {
 }
 
 export default class NavBar extends React.PureComponent<IProps, IState> {
-  constructor() {
-    super();
+  constructor(props: IProps) {
+    super(props);
 
     this.state = {
       drawerOpen: false,
@@ -44,7 +44,7 @@ export default class NavBar extends React.PureComponent<IProps, IState> {
             </MenuButton>
 
             {/* Side drawer */}
-            <Drawer open={this.state.drawerOpen} onRequestClose={this.toggleDrawer}>
+            <Drawer open={this.state.drawerOpen} onClose={this.toggleDrawer}>
               <DrawerContainer
                 tabIndex={0}
                 role="button"

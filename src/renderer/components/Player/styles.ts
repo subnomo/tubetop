@@ -6,7 +6,7 @@ import PauseCircleFilled from 'material-ui-icons/PauseCircleFilled';
 import Repeat from 'material-ui-icons/Repeat';
 import RepeatOne from 'material-ui-icons/RepeatOne';
 
-import { primary } from '../../colors';
+import { primary } from 'utils/colors';
 
 export const PlayerContainer = styled.div`
   position: fixed;
@@ -19,6 +19,11 @@ export const PlayerContainer = styled.div`
 `;
 
 export const Controls = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

@@ -1,19 +1,28 @@
 import { fromJS } from 'immutable';
 
 import { AppAction } from './actions';
-import { SongData } from '../../components/Song';
+import { SongData } from 'components/Song';
 import {
   ADD_SONG,
   ADD_SONGS,
   PLAY_SONG,
+  STOP_SONG,
   EDIT_SONG,
   EDIT_SONGS,
   REMOVE_SONG,
   CLEAR_SONGS,
+  SEARCH_SONG,
+  SEARCH_SUCCESS,
+  SEARCH_FAILURE,
 } from './constants';
 
 const initialState = fromJS({
   songs: [],
+  search: {
+    loading: false,
+    error: false,
+    results: [],
+  },
 });
 
 export default function appReducer(state = initialState, action: AppAction) {
@@ -27,11 +36,23 @@ export default function appReducer(state = initialState, action: AppAction) {
           } else {
             return { ...song, playing: false };
           }
-        }));
+        })
+      );
+    case STOP_SONG:
+      return state.set('songs', state.get('songs')
+        .map((song: SongData, i: number) => {
+          // Stop given song
+          if (i === action.index) {
+            return { ...song, playing: false };
+          } else {
+            return song;
+          }
+        })
+      );
     case ADD_SONG:
-      return state.set('songs', [...state.get('songs'), action.song]);
+      return state.set('songs', state.get('songs').push(action.song));
     case ADD_SONGS:
-      return state.set('songs', [...state.get('songs'), ...action.songs]);
+      return state.set('songs', state.get('songs').concat(action.songs));
     case EDIT_SONG:
       return state.set('songs', state.get('songs')
         .map((song: SongData) => {
@@ -40,7 +61,8 @@ export default function appReducer(state = initialState, action: AppAction) {
           } else {
             return song;
           }
-        }));
+        })
+      );
     case EDIT_SONGS:
       return state.set('songs', state.get('songs')
         .map((song: SongData) => {
@@ -51,14 +73,24 @@ export default function appReducer(state = initialState, action: AppAction) {
           }
 
           return song;
-        }));
+        })
+      );
     case REMOVE_SONG:
-      return state.set('songs', [
-        ...state.get('songs').slice(0, action.index),
-        ...state.get('songs').slice(action.index + 1),
-      ]);
+      return state.set('songs', state.get('songs').delete(action.index));
     case CLEAR_SONGS:
-      return initialState;
+      return state.set('songs', state.get('songs').clear());
+    case SEARCH_SONG:
+      return state
+        .setIn(['search', 'loading'], true)
+        .setIn(['search', 'error'], false);
+    case SEARCH_SUCCESS:
+      return state
+        .setIn(['search', 'results'], fromJS(action.results))
+        .setIn(['search', 'loading'], false);
+    case SEARCH_FAILURE:
+      return state
+        .setIn(['search', 'error'], fromJS(action.error))
+        .setIn(['search', 'loading'], false);
     default:
       return state;
   }

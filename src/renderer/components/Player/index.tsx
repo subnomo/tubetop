@@ -16,9 +16,10 @@ import RepeatOne from 'material-ui-icons/RepeatOne';
 import Shuffle from 'material-ui-icons/Shuffle';
 import DeleteSweep from 'material-ui-icons/DeleteSweep';
 
-import { SongData } from '../Song';
-import { parseTime } from '../Song/util';
-import { AppAction, playSong, clearSongs, editSongs } from '../../containers/App/actions';
+import { SongData } from 'components/Song';
+import { parseTime } from 'components/Song/util';
+import { AppAction, playSong, clearSongs, editSongs, stopSong } from 'containers/App/actions';
+import { selectSongs } from 'containers/App/selectors';
 import { Order } from './util';
 import {
   PlayerContainer,
@@ -38,11 +39,11 @@ interface IProps extends React.Props<Player> {
   songs: SongData[];
 }
 
-const enum Repeat {
+export const enum Repeat {
   None,
   All,
   One,
-};
+}
 
 interface IState {
   current: number;
@@ -58,11 +59,11 @@ interface IState {
   order: Order;
 }
 
-class Player extends React.PureComponent<IProps, IState> {
-  private audio: HTMLAudioElement;
+export class Player extends React.PureComponent<IProps, IState> {
+  public audio: HTMLAudioElement;
 
-  constructor() {
-    super();
+  constructor(props: IProps) {
+    super(props);
 
     this.state = {
       current: 0,
@@ -79,16 +80,9 @@ class Player extends React.PureComponent<IProps, IState> {
     };
 
     // Media keys
-    ipcRenderer.on('play-pause', () => {
-      if (this.state.playing && !this.state.paused) {
-        this.pause();
-      } else {
-        this.play();
-      }
-    });
-
+    ipcRenderer.on('play-pause', this.toggle);
     ipcRenderer.on('stop', this.stop);
-    ipcRenderer.on('next-track', () => this.skipNext());
+    ipcRenderer.on('next-track', this.skipNext);
     ipcRenderer.on('previous-track', this.skipPrevious);
   }
 
@@ -140,9 +134,9 @@ class Player extends React.PureComponent<IProps, IState> {
         }
       }
 
-      // If no new song has been played, just stop the current song
+      // If stopped, reset state
       if (!newSong) {
-        this.stop();
+        this.reset();
       }
     }
 
@@ -156,8 +150,6 @@ class Player extends React.PureComponent<IProps, IState> {
     let newOrder = new Order(order);
 
     // Remove deleted songs from order
-    let deletedSongs: number[] = [];
-
     for (let i = 0; i < songs.length; i++) {
       let songExists = false;
 
@@ -168,14 +160,10 @@ class Player extends React.PureComponent<IProps, IState> {
         }
       }
 
-      if (!songExists) deletedSongs.push(i);
+      if (!songExists) newOrder.remove(i);
     }
 
-    newOrder.remove(deletedSongs);
-
     // Add new songs to order
-    let newSongs: number[] = [];
-
     for (let i = 0; i < nextProps.songs.length; i++) {
       let newSong = true;
 
@@ -186,10 +174,8 @@ class Player extends React.PureComponent<IProps, IState> {
         }
       }
 
-      if (newSong) newSongs.push(i);
+      if (newSong) newOrder.add(i);
     }
-
-    newOrder.add(newSongs);
 
     if (!order.equals(newOrder)) {
       this.setState({
@@ -230,10 +216,8 @@ class Player extends React.PureComponent<IProps, IState> {
 
       document.title = `${songs[current].title} - tubetop`;
 
-      const song = songs[current];
-
       // Get song info
-      ytdl.getInfo(song.id, (err, info) => {
+      ytdl.getInfo(songs[current].id, (err: any, info: any) => {
         if (err) return console.error(err);
 
         // Get audio only formats
@@ -243,7 +227,7 @@ class Player extends React.PureComponent<IProps, IState> {
         let maxBitrate = 0;
 
         // Get best possible quality
-        audioFormats.forEach((format, i) => {
+        audioFormats.forEach((format: any, i: number) => {
           if (format.audioBitrate > maxBitrate) {
             hqIndex = i;
             maxBitrate = format.audioBitrate;
@@ -285,17 +269,30 @@ class Player extends React.PureComponent<IProps, IState> {
     }
   }
 
-  stop = () => {
+  toggle = () => {
+    if (this.state.playing && !this.state.paused) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
+
+  reset = () => {
     this.audio.pause();
     this.audio.currentTime = 0;
     document.title = 'tubetop';
 
     this.setState({
+      current: 0,
       progress: 0,
       time: 0,
       playing: false,
       paused: false,
     });
+  }
+
+  stop = () => {
+    this.props.dispatch(stopSong(this.state.current));
   }
 
   skipPrevious = () => {
@@ -399,14 +396,9 @@ class Player extends React.PureComponent<IProps, IState> {
     const progress = (this.audio.currentTime / songs[current].duration) * 100;
     const roundedTime = Math.round(this.audio.currentTime);
 
-    if (roundedTime !== time) {
-      this.setState({
-        time: roundedTime,
-      });
-    }
-
     this.setState({
       progress,
+      time: roundedTime,
     });
   }
 
@@ -422,12 +414,9 @@ class Player extends React.PureComponent<IProps, IState> {
     const skipped = this.skipNext();
 
     if (!skipped && repeat === Repeat.All) {
-      this.props.dispatch(playSong(order[0]));
+      this.props.dispatch(playSong(order.get(0)));
     } else if (!skipped) {
       this.stop();
-      this.setState({
-        current: 0,
-      });
     }
   }
 
@@ -586,11 +575,11 @@ class Player extends React.PureComponent<IProps, IState> {
   }
 }
 
-function mapStateToProps(state: any) {
-  const songs: SongData[] | List<SongData> = state.get('global').get('songs');
+export function mapStateToProps(state: any) {
+  const songs: List<SongData> = selectSongs(state);
 
   return {
-    songs: Array.isArray(songs) ? songs : songs.toArray(),
+    songs: songs.toJS(),
   };
 }
 

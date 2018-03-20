@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`search Saga should return the results of the YouTube search 1`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "SELECT": Object {
+    "args": Array [],
+    "selector": [Function],
+  },
+}
+`;
+
+exports[`search Saga should return the results of the YouTube search 2`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "CALL": Object {
+    "args": Array [
+      "https://www.googleapis.com/youtube/v3/search?part=snippet&key=API_KEY&q=abc&maxResults=10",
+    ],
+    "context": null,
+    "fn": [Function],
+  },
+}
+`;
+
+exports[`search Saga should return the results of the YouTube search 3`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "SELECT": Object {
+    "args": Array [],
+    "selector": [Function],
+  },
+}
+`;
+
+exports[`search Saga should return the results of the YouTube search 4`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "CALL": Object {
+    "args": Array [
+      "https://www.googleapis.com/youtube/v3/videos?part=snippet&key=API_KEY&id=dQw4w9WgXcQ",
+    ],
+    "context": null,
+    "fn": [Function],
+  },
+}
+`;
+
+exports[`search Saga should return the results of the YouTube search 5`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "SELECT": Object {
+    "args": Array [],
+    "selector": [Function],
+  },
+}
+`;
+
+exports[`search Saga should return the results of the YouTube search 6`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "CALL": Object {
+    "args": Array [
+      "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&key=API_KEY&maxResults=50&playlistId=PLBCF2DAC6FFB574DE",
+    ],
+    "context": null,
+    "fn": [Function],
+  },
+}
+`;
+
+exports[`searchExtra Saga should dispatch the searchFailure action if a response errors 1`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "SELECT": Object {
+    "args": Array [],
+    "selector": [Function],
+  },
+}
+`;
+
+exports[`searchExtra Saga should dispatch the searchFailure action if a response errors 2`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "CALL": Object {
+    "args": Array [
+      Object {
+        "query": "abc",
+        "type": "tubetop/App/SEARCH_SONG",
+      },
+    ],
+    "context": null,
+    "fn": [Function],
+  },
+}
+`;
+
+exports[`searchExtra Saga should dispatch the searchFailure action if a response errors 3`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "CALL": Object {
+    "args": Array [
+      "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key=API_KEY&id=",
+    ],
+    "context": null,
+    "fn": [Function],
+  },
+}
+`;
+
+exports[`searchExtra Saga should dispatch the searchSuccess action if it requests the data successfully 1`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "SELECT": Object {
+    "args": Array [],
+    "selector": [Function],
+  },
+}
+`;
+
+exports[`searchExtra Saga should dispatch the searchSuccess action if it requests the data successfully 2`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "CALL": Object {
+    "args": Array [
+      Object {
+        "query": "abc",
+        "type": "tubetop/App/SEARCH_SONG",
+      },
+    ],
+    "context": null,
+    "fn": [Function],
+  },
+}
+`;
+
+exports[`searchExtra Saga should dispatch the searchSuccess action if it requests the data successfully 3`] = `
+Object {
+  "@@redux-saga/IO": true,
+  "CALL": Object {
+    "args": Array [
+      "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key=API_KEY&id=%2C%2Cabc",
+    ],
+    "context": null,
+    "fn": [Function],
+  },
+}
+`;
