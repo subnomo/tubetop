@@ -8,4 +8,9 @@ cache: yarn
 notifications:
   email: false
 
+# Only build pushes to master
+branches:
+  only:
+  - master
+
 after_success: "yarn coveralls"
