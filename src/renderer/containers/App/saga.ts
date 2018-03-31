@@ -42,6 +42,8 @@ interface SearchParams {
 export function* search(action: AppAction) {
   const api_key: string = yield select(selectYoutubeAPIKey);
 
+  let items: any[] = [];
+
   if (isYoutubeLink(action.query)) {
     const qs = action.query.split('?')[1];
 
@@ -57,7 +59,7 @@ export function* search(action: AppAction) {
     const res = yield call(request, requestURL);
 
     // Return an array of all video objects
-    return res.items;
+    items = res.items;
     } else if (isYoutubePlaylist(action.query)) {
     const qs = action.query.split('?')[1];
 
@@ -72,7 +74,7 @@ export function* search(action: AppAction) {
     const requestURL = `https://www.googleapis.com/youtube/v3/playlistItems?${query}`;
     const res = yield call(request, requestURL);
 
-    return res.items;
+    items = res.items;
     } else {
     const params: SearchParams = {
       part: 'snippet',
@@ -85,8 +87,18 @@ export function* search(action: AppAction) {
     const requestURL = `https://www.googleapis.com/youtube/v3/search?${query}`;
     const res = yield call(request, requestURL);
 
-    return res.items;
+    items = res.items;
   }
+
+  let nonDeletedItems: any[] = [];
+
+  items.forEach((item) => {
+    if (item.snippet.title !== 'Deleted video') {
+      nonDeletedItems.push(item);
+    }
+  });
+
+  return nonDeletedItems;
 }
 
 // Search YouTube but also get extra info (video length, etc.)
