@@ -1,4 +1,4 @@
-  import { SongData } from 'components/Song';
+import { SongData } from 'components/Song';
 import {
   PLAY_SONG,
   STOP_SONG,
