@@ -43,9 +43,30 @@ describe('search Saga', () => {
       expect(callDescriptor).toMatchSnapshot();
 
       // Returns
-      const res = { items: [1, 2, 3] };
+      const res = {
+        items: [
+          {
+            snippet: {
+              title: 'one',
+            },
+          },
+
+          {
+            snippet: {
+              title: 'two',
+            },
+          },
+
+          {
+            snippet: {
+              title: 'Deleted video',
+            },
+          },
+        ],
+      };
+
       const returnVal = clone.next(res).value;
-      expect(returnVal).toEqual(res.items);
+      expect(returnVal).toEqual(res.items.slice(0, res.items.length - 1));
     }
 
     test();
