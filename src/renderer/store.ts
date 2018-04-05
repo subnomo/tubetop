@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, autoRehydrate } from 'redux-persist-immutable';
 import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
@@ -18,6 +19,7 @@ export function configureStore(history: any, initialState = {}) {
 
   const enhancers = [
     applyMiddleware(...middlewares),
+    autoRehydrate(),
   ];
 
   const composeEnhancers =
@@ -35,13 +37,15 @@ export function configureStore(history: any, initialState = {}) {
   const store = createStore(
     createReducer(),
     fromJS(initialState),
-    composeEnhancers(...enhancers)
+    composeEnhancers(...enhancers),
   );
 
   // Extensions
   (store as any).runSaga = sagaMiddleware.run;
   (store as any).injectedReducers = {}; // Reducer registry
   (store as any).injectedSagas = {}; // Saga registry
+
+  persistStore(store, { whitelist: ['settings'] });
 
   return store;
 }

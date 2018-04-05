@@ -99,7 +99,6 @@
     "react-router-redux": "^5.0.0-alpha.8",
     "redux": "^3.7.2",
     "redux-immutable": "^4.0.0",
-    "redux-persist": "^5.4.0",
     "redux-persist-immutable": "^4.3.1",
     "redux-saga": "^0.16.0",
     "reselect": "^3.0.1",
