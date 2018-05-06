@@ -1,17 +1,23 @@
 {
   "name": "tubetop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A YouTube music player, for your desktop.",
-  "main": "dist/app.js",
+  "main": "build/app.js",
   "repository": "https://github.com/subnomo/tubetop",
   "author": "Alex Taylor <alex@alext.xyz>",
   "license": "MIT",
   "scripts": {
     "start": "node fuse",
-    "build:dist": "node fuse dist",
+    "build": "node fuse build",
+    "dist": "node fuse build && electron-builder",
+    "dist:all": "node fuse build && electron-builder -wl --x64 --ia32",
     "test": "jest --coverage",
     "test:nocov": "jest",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
+  },
+  "build": {
+    "artifactName": "${name}-${version}-${os}-${arch}-setup.${ext}",
+    "files": ["build/**/*"]
   },
   "jest": {
     "collectCoverageFrom": [
@@ -71,6 +77,7 @@
     "@types/whatwg-fetch": "^0.0.33",
     "coveralls": "^3.0.1",
     "electron": "^2.0.0",
+    "electron-builder": "^20.11.1",
     "electron-devtools-installer": "^2.2.3",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",

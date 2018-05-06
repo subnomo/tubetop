@@ -34,7 +34,7 @@ function createWindow() {
 
   // Load index.html
   const appPath = app.getAppPath();
-  win.loadURL(`file://${appPath}/dist/index.html`);
+  win.loadURL(`file://${appPath}/build/index.html`);
 
   // Open dev tools
   if (debug) win.webContents.openDevTools();

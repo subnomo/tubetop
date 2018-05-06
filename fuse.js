@@ -1,8 +1,6 @@
 const {
   FuseBox,
   Sparky,
-  CSSPlugin,
-  CSSResourcePlugin,
   CopyPlugin,
   EnvPlugin,
   QuantumPlugin,
@@ -15,18 +13,18 @@ const ASSETS = ['*.jpg', '*.png', '*.jpeg', '*.gif', '*.svg'];
 
 let ip = process.env.NODE_ENV === 'production';
 
-// Copy the renderer html file to dist
+// Copy the renderer html file to build
 Sparky.task('copy-html', () => {
-  return Sparky.src('src/renderer/index.html').dest('dist/$name');
+  return Sparky.src('src/renderer/index.html').dest('build/$name');
 });
 
 let fuse;
 let fuseRenderer;
 
-function initFuse() {
+async function initFuse() {
   const config = {
     homeDir: 'src/',
-    output: 'dist/$name.js',
+    output: 'build/$name.js',
     log: true,
     cache: !ip,
     sourceMaps: !ip,
@@ -35,12 +33,11 @@ function initFuse() {
 
   fuse = FuseBox.init({
     ...config,
-    target: 'electron',
+    target: 'server',
     plugins: [
       EnvPlugin({ NODE_ENV: ip ? 'production' : 'development' }),
-      [CSSResourcePlugin(), CSSPlugin()],
       ip && QuantumPlugin({
-        target: 'electron',
+        target: 'server',
         bakeApiIntoBundle : 'app',
         uglify: true,
         treeshake: true,
@@ -53,7 +50,6 @@ function initFuse() {
     target: 'electron',
     plugins: [
       EnvPlugin({ NODE_ENV: ip ? 'production' : 'development' }),
-      [CSSResourcePlugin(), CSSPlugin()],
       ip && QuantumPlugin({
         target: 'electron',
         bakeApiIntoBundle : 'renderer',
@@ -94,17 +90,21 @@ function bundle() {
   };
 }
 
-Sparky.task('bundle', ['copy-html'], () => {
-  bundle();
-  fuse.run();
+Sparky.task('bundle', ['copy-html'], async () => {
+  await bundle();
+  await fuse.run();
 });
 
-Sparky.task('dist', ['copy-html'], () => {
+Sparky.task('clean', () => {
+  return Sparky.src('./build').clean('build/');
+});
+
+Sparky.task('build', ['clean', 'copy-html'], async () => {
   ip = true;
-  initFuse();
-  bundle();
-  fuse.run();
-  fuseRenderer.run();
+  await initFuse();
+  await bundle();
+  await fuse.run();
+  await fuseRenderer.run();
 });
 
 Sparky.task('default', ['copy-html'], () => {
@@ -128,12 +128,11 @@ Sparky.task('default', ['copy-html'], () => {
       if (!ip) {
         spawn('node', [`${__dirname}/node_modules/electron/cli.js`, __dirname], {
           stdio: 'inherit',
+        }).on('exit', (code) => {
+          console.log(`electron process exited with code ${code}`);
+          process.exit(code);
         });
       }
     });
   });
-});
-
-Sparky.task('clean', () => {
-  return Sparky.src('dist/*').clean('dist/');
 });
