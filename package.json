@@ -17,7 +17,9 @@
   },
   "build": {
     "artifactName": "${name}-${version}-${os}-${arch}-setup.${ext}",
-    "files": ["build/**/*"]
+    "files": [
+      "build/**/*"
+    ]
   },
   "jest": {
     "collectCoverageFrom": [
@@ -76,7 +78,7 @@
     "@types/uuid": "^3.4.3",
     "@types/whatwg-fetch": "^0.0.33",
     "coveralls": "^3.0.1",
-    "electron": "^2.0.0",
+    "electron": "^2.0.2",
     "electron-builder": "^20.11.1",
     "electron-devtools-installer": "^2.2.3",
     "enzyme": "^3.3.0",

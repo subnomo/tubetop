@@ -15,7 +15,10 @@ let ip = process.env.NODE_ENV === 'production';
 
 // Copy the renderer html file to build
 Sparky.task('copy-html', () => {
-  return Sparky.src('src/renderer/index.html').dest('build/$name');
+  const file = ip ? 'src/renderer/index.html' : 'src/renderer/index-dev.html';
+  return Sparky.src(file)
+    .file('*', (file) => file.rename('index.html'))
+    .dest('build/$name');
 });
 
 let fuse;
@@ -99,8 +102,10 @@ Sparky.task('clean', () => {
   return Sparky.src('./build').clean('build/');
 });
 
-Sparky.task('build', ['clean', 'copy-html'], async () => {
+Sparky.task('build', ['clean'], async () => {
   ip = true;
+
+  await Sparky.exec('copy-html');
   await initFuse();
   await bundle();
   await fuse.run();
