@@ -1,7 +1,7 @@
 import * as React from 'react';
-import List from 'material-ui/List';
 
 import Song, { SongData } from 'components/Song';
+import { List } from './styles';
 
 interface IProps extends React.Props<SongList> {
   songs: SongData[];
