@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import List from 'material-ui/List';
 
 import SongList from '..';
+import { List } from '../styles';
 import Song, { SongData } from 'components/Song';
 
 describe('<SongList />', () => {

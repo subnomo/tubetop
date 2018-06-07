@@ -50,6 +50,12 @@ describe('<HomePage />', () => {
     expect(hpComponent.contains(songList)).toBe(true);
   });
 
+  it('should render a placeholder when there are no songs', () => {
+    hpComponent.setProps({ songs: [] });
+    const songList: JSX.Element = <SongList songs={[]} />;
+    expect(hpComponent.contains(songList)).toBe(false);
+  });
+
   describe('mapStateToProps', () => {
     it('should take the state and return an object containing songs', () => {
       const mockedState = fromJS({
