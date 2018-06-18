@@ -461,6 +461,21 @@ describe('<Player />', () => {
       expect(newOrder.equals(order)).toBe(false);
     });
 
+    it('should not do a full shuffle if currently playing', () => {
+      playerComponent.setState({
+        playing: true,
+      });
+
+      const instance = playerComponent.instance() as Player;
+      instance.toggleShuffle();
+
+      const state = playerComponent.state();
+      const order: Order = state.order;
+      const current: number = state.current;
+
+      expect(order.get(0)).toBe(current);
+    });
+
     it('should disable shuffle if already enabled', () => {
       playerComponent.setState({
         shuffle: true,

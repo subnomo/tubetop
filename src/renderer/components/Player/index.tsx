@@ -356,13 +356,18 @@ export class Player extends React.PureComponent<IProps, IState> {
   }
 
   toggleShuffle = () => {
-    const { current, order, shuffle } = this.state;
+    const { current, order, shuffle, playing } = this.state;
 
     let newOrder = new Order(order);
 
     if (shuffle) {
       newOrder.sort();
+    } else if (!playing) {
+      // Hasn't started playing, do full shuffle
+      newOrder.shuffle();
+      this.setState({ current: newOrder.get(0) });
     } else {
+      // Has started playing, shuffle with current as first
       newOrder.shuffle(current);
     }
 
