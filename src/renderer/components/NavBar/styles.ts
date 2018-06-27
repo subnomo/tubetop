@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 
 export const Root = styled.div`
   width: 100%;
+  position: fixed;
+  z-index: 10;
 `;
 
 export const MenuButton = styled(IconButton)`
