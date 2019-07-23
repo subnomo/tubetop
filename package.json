@@ -95,7 +95,7 @@
     "hoist-non-react-statics": "^2.5.0",
     "immutable": "^3.8.2",
     "invariant": "^2.2.4",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "material-ui": "1.0.0-beta.25",
     "material-ui-icons": "1.0.0-beta.17",
     "prop-types": "^15.6.1",
