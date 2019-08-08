@@ -15,8 +15,7 @@ let ip = process.env.NODE_ENV === 'production';
 
 // Copy the renderer html file to build
 Sparky.task('copy-html', () => {
-  const file = ip ? 'src/renderer/index.html' : 'src/renderer/index-dev.html';
-  return Sparky.src(file)
+  return Sparky.src('src/renderer/index.html')
     .file('*', (file) => file.rename('index.html'))
     .dest('build/$name');
 });
@@ -52,7 +51,6 @@ async function initFuse() {
     ...config,
     target: 'electron',
     plugins: [
-      EnvPlugin({ NODE_ENV: ip ? 'production' : 'development' }),
       ip && QuantumPlugin({
         target: 'electron',
         bakeApiIntoBundle : 'renderer',

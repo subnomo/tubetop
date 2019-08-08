@@ -1,3 +1,5 @@
+import { remote } from 'electron';
+
 declare const FuseBox: any;
 
 interface IHMROptions {
@@ -38,7 +40,7 @@ const customizedHMRPlugin = {
   }
 };
 
-if (process.env.NODE_ENV !== 'production' && !process.env.hmrRegistered) {
-  (process.env as any).hmrRegistered = false;
+if (remote.process.env.NODE_ENV !== 'production' && !remote.process.env.hmrRegistered) {
+  (remote.process.env as any).hmrRegistered = false;
   FuseBox.addPlugin(customizedHMRPlugin);
 }

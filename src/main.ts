@@ -22,7 +22,10 @@ function createWindow() {
   	width: 800,
   	minWidth: 775,
   	height: 600,
-  	minHeight: 400,
+    minHeight: 400,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   // Install dev extensions

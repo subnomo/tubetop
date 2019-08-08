@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { persistStore, autoRehydrate } from 'redux-persist-immutable';
 import { fromJS } from 'immutable';
+import { remote } from 'electron';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createHashHistory from 'history/createHashHistory';
@@ -23,7 +24,7 @@ export function configureStore(history: any, initialState = {}) {
   ];
 
   const composeEnhancers =
-    process.env.NODE_ENV !== 'production' &&
+    remote.process.env.NODE_ENV !== 'production' &&
     typeof window === 'object' &&
     (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
