@@ -1,7 +1,3 @@
-import { remote } from 'electron';
-
-declare const FuseBox: any;
-
 interface IHMROptions {
   type: 'js' | 'css';
   path: string;
@@ -25,22 +21,10 @@ const customizedHMRPlugin = {
       return true;
     };
 
-    if (opts.type === 'js' && shouldUpdate(opts.path)) {
-      FuseBox.dynamic(opts.path, opts.content);
-      FuseBox.flush(shouldUpdate);
-
-      if (FuseBox.mainFile) {
-        FuseBox.import(FuseBox.mainFile);
-      }
-    } else if (!shouldUpdate(opts.path)) {
+    if (!shouldUpdate(opts.path)) {
       window.location.reload();
     }
 
     return true;
   }
 };
-
-if (remote.process.env.NODE_ENV !== 'production' && !remote.process.env.hmrRegistered) {
-  (remote.process.env as any).hmrRegistered = false;
-  FuseBox.addPlugin(customizedHMRPlugin);
-}

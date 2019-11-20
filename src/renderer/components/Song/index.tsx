@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Map } from 'immutable';
 import { ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction } from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui-icons/Delete';

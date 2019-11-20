@@ -1,6 +1,11 @@
 import { app, BrowserWindow, globalShortcut } from 'electron';
 
-const debug = process.env.NODE_ENV !== 'production';
+const debug = process.env.NODE_ENV === 'development';
+
+if (!debug) {
+  process.env.NODE_ENV = 'production';
+}
+
 let installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS;
 
 if (debug) {
@@ -37,7 +42,8 @@ function createWindow() {
 
   // Load index.html
   const appPath = app.getAppPath();
-  win.loadURL(`file://${appPath}/build/index.html`);
+  console.log(__dirname);
+  win.loadURL(`${__dirname}/../renderer/index.html`);
 
   // Open dev tools
   if (debug) win.webContents.openDevTools();

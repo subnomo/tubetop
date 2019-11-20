@@ -1,141 +1,74 @@
-const {
-  FuseBox,
-  Sparky,
-  CopyPlugin,
-  EnvPlugin,
-  QuantumPlugin,
-} = require('fuse-box');
-const { spawn } = require('child_process');
-const fs = require('fs');
+import { fusebox, sparky } from 'fuse-box';
 
-const DEV_PORT = 4444;
-const ASSETS = ['*.jpg', '*.png', '*.jpeg', '*.gif', '*.svg'];
-
-let ip = process.env.NODE_ENV === 'production';
-
-// Copy the renderer html file to build
-Sparky.task('copy-html', () => {
-  return Sparky.src('src/renderer/index.html')
-    .file('*', (file) => file.rename('index.html'))
-    .dest('build/$name');
-});
-
-let fuse;
-let fuseRenderer;
-
-async function initFuse() {
-  const config = {
-    homeDir: 'src/',
-    output: 'build/$name.js',
-    log: true,
-    cache: !ip,
-    sourceMaps: !ip,
-    tsConfig: 'tsconfig.json',
-  };
-
-  fuse = FuseBox.init({
-    ...config,
-    target: 'server',
-    plugins: [
-      EnvPlugin({ NODE_ENV: ip ? 'production' : 'development' }),
-      ip && QuantumPlugin({
-        target: 'server',
-        bakeApiIntoBundle : 'app',
-        uglify: true,
-        treeshake: true,
-      }),
-    ]
-  });
-
-  fuseRenderer = FuseBox.init({
-    ...config,
-    target: 'electron',
-    plugins: [
-      ip && QuantumPlugin({
-        target: 'electron',
-        bakeApiIntoBundle : 'renderer',
-        uglify: true,
-        treeshake: true,
-      }),
-    ]
-  });
-}
-
-initFuse();
-
-function bundle() {
-  // Bundle main electron code
-  const appBundle = fuse.bundle('app').instructions('> [main.ts]');
-
-  // Bundle electron renderer code
-  const rendererBundle = fuseRenderer
-    .bundle('renderer')
-    .instructions('> [renderer/index.tsx]')
-    .plugin(CopyPlugin({
-        useDefault: false,
-        files: ASSETS,
-        dest: 'assets',
-        resolve: 'assets/',
-    }));
-
-  // Setup aliases
-  const dirs = fs.readdirSync('./src/renderer');
-
-  for (let dir of dirs) {
-    rendererBundle.alias(dir, `~/renderer/${dir}`);
-  }
-
-  return {
-    appBundle,
-    rendererBundle,
-  };
-}
-
-Sparky.task('bundle', ['copy-html'], async () => {
-  await bundle();
-  await fuse.run();
-});
-
-Sparky.task('clean', () => {
-  return Sparky.src('./build').clean('build/');
-});
-
-Sparky.task('build', ['clean'], async () => {
-  ip = true;
-
-  await Sparky.exec('copy-html');
-  await initFuse();
-  await bundle();
-  await fuse.run();
-  await fuseRenderer.run();
-});
-
-Sparky.task('default', ['copy-html'], () => {
-  // Start the hot-reload server
-  if (!ip) {
-    fuseRenderer.dev({ port: DEV_PORT, httpServer: false });
-  }
-
-  const { appBundle, rendererBundle } = bundle();
-
-  // Watch and hot-reload
-  if (!ip) {
-    appBundle.watch();
-
-    rendererBundle.watch();
-    rendererBundle.hmr();
-  }
-
-  return fuse.run().then(() => {
-    fuseRenderer.run().then(() => {
-      if (!ip) {
-        spawn('node', [`${__dirname}/node_modules/electron/cli.js`, __dirname], {
-          stdio: 'inherit',
-        }).on('exit', (code) => {
-          console.log(`electron process exited with code ${code}`);
-          process.exit(code);
-        });
+class Context {
+  isProduction;
+  runServer;
+  getMainConfig() {
+    return fusebox({
+      output: 'build/main/$name',
+      target: 'electron',
+      homeDir: 'src',
+      entry: 'main.ts',
+      useSingleBundle: true,
+      dependencies: { ignoreAllExternal: true },
+      logging: { level: 'succinct' },
+      cache: {
+        enabled: true,
+        root: '.cache/main'
       }
     });
+  }
+  launch(handler) {
+    handler.onComplete(output => {
+      output.electron.handleMainProcess();
+    });
+  }
+  getRendererConfig() {
+    return fusebox({
+      output: 'build/renderer/$name-$hash',
+      target: 'electron',
+      homeDir: 'src/renderer',
+      entry: 'index.tsx',
+      dependencies: { include: ['tslib'] },
+      logging: { level: 'succinct' },
+      webIndex: {
+        publicPath: './',
+        template: 'src/renderer/index.html'
+      },
+      cache: {
+        enabled: false,
+        root: '.cache/renderer'
+      },
+      devServer: this.runServer ? {
+        httpServer: false,
+        hmrServer: { port: 7878 }
+      } : false
+    });
+  }
+}
+const { task, rm } = sparky(Context);
+
+task('default', async ctx => {
+  await rm('./build');
+  ctx.runServer = true;
+
+  const rendererConfig = ctx.getRendererConfig();
+  await rendererConfig.runDev();
+
+  const electronMain = ctx.getMainConfig();
+  await electronMain.runDev(handler => ctx.launch(handler));
+});
+
+task('build', async ctx => {
+  await rm('./build');
+  ctx.runServer = false;
+
+  const rendererConfig = ctx.getRendererConfig();
+  await rendererConfig.runProd({ uglify: true });
+
+  const electronMain = ctx.getMainConfig();
+  await electronMain.runProd({
+    uglify: true,
+    manifest: true,
   });
 });

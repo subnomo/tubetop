@@ -1,6 +1,6 @@
 node_modules/
 *.log
-.fusebox/
+.cache/
 build/
 dist/
 coverage/
